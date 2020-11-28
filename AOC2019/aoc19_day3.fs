@@ -125,14 +125,13 @@ let points_at_which_pair_intersect ((a1x,a1y),(b1x,b1y)) ((a2x,a2y),(b2x,b2y)) =
 let result = seq {
                     for k in s1 do
                        for j in s2 do
-                                let p = ((points_at_which_pair_intersect  k j) |> List.map (fun c -> mhdist c, c)) 
+                                let p = ((points_at_which_pair_intersect  k j) |> List.map (fun c -> mhdist c, c)) |> List.sort
                                 if p.Length > 0 then
                                     // printfn "\n\nk:%A\nj:%A\np:%A\n" p k j 
                                     yield p,k,j
                     }
-// printfn "%A\n" (result |> Seq.sort )
+printfn "%A\n" (result |> Seq.sort )
 printfn "Answer part 1 (5319) is %A" (result |> Seq.toList |> List.sort ).[1]
-
 
 // let rec convert_path_to_points path =
 //     match path with
@@ -149,6 +148,40 @@ printfn "Answer part 1 (5319) is %A" (result |> Seq.toList |> List.sort ).[1]
 (* ========================================================================== *)
 (* ========================================================================== *)
 (*                      Part 2                                                *)
+
+let segmentlen linesegment =
+    let x1, y1, x2, y2 = linesegment
+    mhdist ((x2-x1), (y2-y1))
+
+let fraction linesegment (point :(int * int)) =
+    let x1, y1, x2, y2 = linesegment
+    let xp, yp = point
+    mhdist (xp-x1 , yp - y1)
+
+let line_point_intersection linesegment  (point :(int * int)) =
+    let x1, y1, x2, y2 = linesegment
+    let xp, yp = point
+    if x1 = x2  && xp = x1 // vertical line and we are on it
+    then if y1 < y2
+         then if yp >= y1 && yp <= y2 then true else false
+         else if yp >= y2 && yp <= y1 then true else false
+    else if y1=y2 && yp = y1 // else horizonal line && we are on it
+         then if x1 < x2
+              then if xp >= x1 && xp <= x2 then true else false
+              else if xp >= x2 && xp <= x1 then true else false
+         else false
+
+
+    
+let rec path_length_to path (apoint :(int * int)) dist =
+    match path with
+        | h1::tail -> if line_point_intersection h1 apoint
+                      then
+                          let f = fraction h1 apoint
+                          dist + f
+                      else path_length_to tail apoint (dist + (segmentlen h1))
+        | []       -> 0                      
+ 
 
 let rec convert_path_to_points path =
     match path with
@@ -448,3 +481,4 @@ Compilation finished at Sun Dec  8 17:41:27
 5319 right answer first try
     
    *)
+
