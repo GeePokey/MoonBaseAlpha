@@ -1,4 +1,3 @@
-*~
-*.pyc
-tt
-*.tmp
+.DS_Store
+
+
