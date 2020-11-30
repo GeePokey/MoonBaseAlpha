@@ -1,6 +1,8 @@
 
 
 inputstart, inputend = 109165,576723
+# Dad's input
+# inputstart, inputend = 353096, 843212
 
 def producePossiblePWs(startrange,endrange):
     possiblepws = []
@@ -74,3 +76,4 @@ assert (ONLYTWO(111122)) == True
 
 
 print(len(p2producePossiblePWs(inputstart,inputend)))
+
