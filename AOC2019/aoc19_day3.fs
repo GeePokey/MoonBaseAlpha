@@ -158,6 +158,7 @@ let fraction linesegment (point :(int * int)) =
     let xp, yp = point
     mhdist (xp-x1 , yp - y1)
 
+
 let line_point_intersection linesegment  (point :(int * int)) =
     let x1, y1, x2, y2 = linesegment
     let xp, yp = point
@@ -172,7 +173,37 @@ let line_point_intersection linesegment  (point :(int * int)) =
          else false
 
 
-    
+printfn ""
+
+printfn "line_point_intersection true %A " (line_point_intersection ((40,0, 1000,0)) ( 500,0))
+printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 500,1))
+printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 0,0))
+printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 1500,0))
+
+printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,1000)) ( 0,500))
+printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 1,500))
+printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 0,0))
+printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 0,1500))
+
+printfn "line_point_intersection true %A " (line_point_intersection ((40,0, -1000,0)) ( -500,0))
+printfn "line_point_intersection true %A " (line_point_intersection ((40,0, -1000,0)) ( 0,0))
+printfn "line_point_intersection test %A " (line_point_intersection ((40,0, -1000,0)) ( -500,1))
+printfn "line_point_intersection test %A " (line_point_intersection ((40,0, -1000,0)) ( -1500,0))
+
+printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,-500))
+printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,0))
+printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,-1000)) ( 1,-500))
+printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,-1500))
+
+
+printfn "fraction %A " (fraction ((40,0, 1000,0)) ( 500,0))
+printfn "fraction %A " (fraction ((0,40, 0,1000)) ( 0,500))
+printfn "fraction %A " (fraction ((0,-40, 0,-1000)) ( 0,-500))
+
+
+printfn ""
+printfn ""
+
 let rec path_length_to path (apoint :(int * int)) dist =
     match path with
         | h1::tail -> if line_point_intersection h1 apoint
