@@ -58,13 +58,16 @@ def p2producePossiblePWs(startrange,endrange):
     return possiblepws
 
 def ONLYTWO(num):
-    strnum = str(num)
+
+    strnum = "!" + str(num)
     for i in range(len(strnum)-1):
+        if i == 0:
+            continue
         if i+2 > len(strnum)-1:
             if strnum[i] == strnum[i+1] and strnum[i] > strnum[i-1]:
                 return True
             return False
-        if strnum[i] == strnum[i+1] and strnum[i] < strnum[i+2]:
+        if strnum[i] == strnum[i+1] and strnum[i] < strnum[i+2] and strnum[i]>strnum[i-1]:
             return True
 
 #number needs ONLY ONE pair that isnt part of a larger group
