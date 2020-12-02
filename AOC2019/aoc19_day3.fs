@@ -74,6 +74,16 @@ let mhdist (x,y)  = abs(x) + abs(y)  // manhatten distance from origin
 let s1 = (input2segments a1)
 let s2 = (input2segments a2)
 
+let input2segments_notsorted (ina : string list )=
+    let dir1 = ina |> List.map (fun c ->  c.[0],  System.Int32.Parse c.[1..] )    
+    let dd = dir1 |> List.map dxy
+    let pointlist = (0,0)::(aggr dd (0,0) )
+    let numpoints = List.length pointlist
+    List.zip pointlist.[0..(numpoints-2)] pointlist.[1..(numpoints-1)] 
+
+let s1ns = (input2segments_notsorted a1)
+let s2ns = (input2segments_notsorted a2)
+
 let points_at_which_pair_intersect ((a1x,a1y),(b1x,b1y)) ((a2x,a2y),(b2x,b2y)) =
     let horiz1 = (a1y=b1y)
     let horiz2 = (a2y=b2y)    
@@ -150,17 +160,17 @@ printfn "Answer part 1 (5319) is %A" (result |> Seq.toList |> List.sort ).[1]
 (*                      Part 2                                                *)
 
 let segmentlen linesegment =
-    let x1, y1, x2, y2 = linesegment
+    let ((x1, y1), (x2, y2)) = linesegment
     mhdist ((x2-x1), (y2-y1))
 
-let fraction linesegment (point :(int * int)) =
-    let x1, y1, x2, y2 = linesegment
+let fraction linesegment (point :(int * int)) = 
+    let ((x1, y1), (x2, y2)) = linesegment
     let xp, yp = point
     mhdist (xp-x1 , yp - y1)
 
 
 let line_point_intersection linesegment  (point :(int * int)) =
-    let x1, y1, x2, y2 = linesegment
+    let ((x1, y1), (x2, y2)) = linesegment
     let xp, yp = point
     if x1 = x2  && xp = x1 // vertical line and we are on it
     then if y1 < y2
@@ -173,36 +183,34 @@ let line_point_intersection linesegment  (point :(int * int)) =
          else false
 
 
-printfn ""
+// printfn ""
 
-printfn "line_point_intersection true %A " (line_point_intersection ((40,0, 1000,0)) ( 500,0))
-printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 500,1))
-printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 0,0))
-printfn "line_point_intersection test %A " (line_point_intersection ((40,0, 1000,0)) ( 1500,0))
-
-printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,1000)) ( 0,500))
-printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 1,500))
-printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 0,0))
-printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,1000)) ( 0,1500))
-
-printfn "line_point_intersection true %A " (line_point_intersection ((40,0, -1000,0)) ( -500,0))
-printfn "line_point_intersection true %A " (line_point_intersection ((40,0, -1000,0)) ( 0,0))
-printfn "line_point_intersection test %A " (line_point_intersection ((40,0, -1000,0)) ( -500,1))
-printfn "line_point_intersection test %A " (line_point_intersection ((40,0, -1000,0)) ( -1500,0))
-
-printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,-500))
-printfn "line_point_intersection true %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,0))
-printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,-1000)) ( 1,-500))
-printfn "line_point_intersection test %A " (line_point_intersection ((0,40, 0,-1000)) ( 0,-1500))
-
-
-printfn "fraction %A " (fraction ((40,0, 1000,0)) ( 500,0))
-printfn "fraction %A " (fraction ((0,40, 0,1000)) ( 0,500))
-printfn "fraction %A " (fraction ((0,-40, 0,-1000)) ( 0,-500))
+// printfn "line_point_intersection true %A " (line_point_intersection ((40,0), (1000,0)) ( 500,0))
+// printfn "line_point_intersection test %A " (line_point_intersection ((40,0), (1000,0)) ( 500,1))
+// printfn "line_point_intersection test %A " (line_point_intersection ((40,0), (1000,0)) ( 0,0))
+// printfn "line_point_intersection test %A " (line_point_intersection ((40,0), (1000,0)) ( 1500,0))
+                                                                          
+// printfn "line_point_intersection true %A " (line_point_intersection ((0,40), (0,1000)) ( 0,500))
+// printfn "line_point_intersection test %A " (line_point_intersection ((0,40), (0,1000)) ( 1,500))
+// printfn "line_point_intersection test %A " (line_point_intersection ((0,40), (0,1000)) ( 0,0))
+// printfn "line_point_intersection test %A " (line_point_intersection ((0,40), (0,1000)) ( 0,1500))
+                                                                          
+// printfn "line_point_intersection true %A " (line_point_intersection ((40,0), (-1000,0)) ( -500,0))
+// printfn "line_point_intersection true %A " (line_point_intersection ((40,0), (-1000,0)) ( 0,0))
+// printfn "line_point_intersection test %A " (line_point_intersection ((40,0), (-1000,0)) ( -500,1))
+// printfn "line_point_intersection test %A " (line_point_intersection ((40,0), (-1000,0)) ( -1500,0))
+                                                                          
+// printfn "line_point_intersection true %A " (line_point_intersection ((0,40), (0,-1000)) ( 0,-500))
+// printfn "line_point_intersection true %A " (line_point_intersection ((0,40), (0,-1000)) ( 0,0))
+// printfn "line_point_intersection test %A " (line_point_intersection ((0,40), (0,-1000)) ( 1,-500))
+// printfn "line_point_intersection test %A " (line_point_intersection ((0,40), (0,-1000)) ( 0,-1500))
 
 
-printfn ""
-printfn ""
+// printfn "fraction %A " (fraction ((40,0),( 1000,0)) ( 500,0))
+// printfn "fraction %A " (fraction ((0,40),( 0,1000)) ( 0,500))
+// printfn "fraction %A " (fraction ((0,-40),( 0,-1000)) ( 0,-500))
+
+
 
 let rec path_length_to path (apoint :(int * int)) dist =
     match path with
@@ -212,7 +220,40 @@ let rec path_length_to path (apoint :(int * int)) dist =
                           dist + f
                       else path_length_to tail apoint (dist + (segmentlen h1))
         | []       -> 0                      
- 
+
+let combined_path_length_to path1 path2 point =
+    (path_length_to path1 point 0) + (path_length_to path2 point 0) 
+
+
+let point_of aresult = 
+    let ([(_, point)], _, _ ) =   aresult
+    point
+
+let part2p = result |> Seq.map point_of 
+
+printfn "part2p  %A" part2p
+
+let part2pc = result |> Seq.map point_of |> Seq.map (combined_path_length_to s1ns s2ns) 
+
+printfn "part2pc  %A" part2pc
+
+let part2 = result |> Seq.map point_of |> Seq.map (combined_path_length_to s1ns s2ns) |> Seq.sort
+
+printfn "part2  %A" part2
+
+let ([(dist, point)], ls1, ls2 ) =     (Seq.item 0 result)
+printfn "args of path_length_to %A "    (Seq.item 0 result)
+printfn "args of path_length_to %A "    (Seq.item 1 result)
+printfn "args %A %A %A %A" dist point ls1 ls2
+printfn "point of %A" (point_of (Seq.item 0 result))
+printfn ""
+printfn "path_length_to %A" (path_length_to s1ns  point 0)
+printfn "path_length_to %A" (path_length_to s2ns  point 0)
+printfn "como length_to %A" (combined_path_length_to s1ns s2ns  point)
+printfn ""
+printfn "-------------------------------"
+printfn ""
+
 
 let rec convert_path_to_points path =
     match path with
