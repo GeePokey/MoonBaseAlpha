@@ -1,6 +1,7 @@
 printfn "Advent of Code 2020 Day 4"
 // Day 4
-let lines = System.IO.File.ReadAllLines("input.day4.txt") 
+// let lines = System.IO.File.ReadAllLines("input.day4.txt") 
+let lines = System.IO.File.ReadAllLines("D4_kinput.txt") 
 // let lines = System.IO.File.ReadAllLines("input.txt")
 // let lines = System.IO.File.ReadAllLines("part2.txt") 
 // printfn "%A" lines
