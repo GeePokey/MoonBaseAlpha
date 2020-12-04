@@ -1,7 +1,8 @@
 printfn "Advent of Code 2020 Day 4"
 // Day 4
 let lines = System.IO.File.ReadAllLines("input.day4.txt") 
-// let lines = System.IO.File.ReadAllLines("input.txt") 
+// let lines = System.IO.File.ReadAllLines("input.txt")
+// let lines = System.IO.File.ReadAllLines("part2.txt") 
 printfn "%A" lines
 
 let len = lines |> Seq.length
@@ -47,9 +48,8 @@ let rec validate1 input paccum =
         | []       -> printfn "end of list"
         
 
-validate1 ( lines |> Seq.toList ) ["fred"]
 
-printfn "containtest %A" ("abcdef".Contains("abc"))
+// Part1
 // byr (Birth Year)
 // iyr (Issue Year)
 // eyr (Expiration Year)
@@ -139,15 +139,15 @@ let (|Regex|_|) pattern input =
 
 // Part 2
 
-// byr (Birth Year) - four digits; at least 1920 and at most 2002.
-// iyr (Issue Year) - four digits; at least 2010 and at most 2020.
-// eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
-// hgt (Height) - a number followed by either cm or in:
+// 02 byr (Birth Year) - four digits; at least 1920 and at most 2002.
+// 04 iyr (Issue Year) - four digits; at least 2010 and at most 2020.
+// 08 eyr (Expiration Year) - four digits; at least 2020 and at most 2030.
+// 10 hgt (Height) - a number followed by either cm or in:
 // If cm, the number must be at least 150 and at most 193.
 // If in, the number must be at least 59 and at most 76.
-// hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
-// ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
-// pid (Passport ID) - a nine-digit number, including leading zeroes.
+// 20 hcl (Hair Color) - a # followed by exactly six characters 0-9 or a-f.
+// 40 ecl (Eye Color) - exactly one of: amb blu brn gry grn hzl oth.
+// 80 pid (Passport ID) - a nine-digit number, including leading zeroes.
 // cid (Country ID) - ignored, missing or not.
 
 let rec monovalidate2 (s:string) =
@@ -157,27 +157,31 @@ let rec monovalidate2 (s:string) =
     else
         match s with
             | Regex @"byr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 1920 && byri <= 2002 then 2 else 0
+                                               if byri >= 1920 && byri <= 2002 then 0x2 else 0
             | Regex @"iyr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 2010 && byri <= 2020 then 4 else 0
+                                               if byri >= 2010 && byri <= 2020 then 0x4 else 0
             | Regex @"eyr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 2020 && byri <= 2030 then 8 else 0
+                                               if byri >= 2020 && byri <= 2030 then 0x8 else 0
             | Regex @"hgt:(\d\d\d)cm" [cm] -> let cmi = int cm
                                               if cmi >= 150 && cmi <= 193 then 0x10 else 0
             | Regex @"hgt:(\d\d)in"  [ma] -> let i = int ma
-                                             if i >= 59 && i <= 76 then 0x20 else 0
-            | Regex @"hcl:#[0-9a-f]{6}$"  [ma] -> printfn "hcl: %A %A" ma s
-                                                  0x40
+                                             if i >= 59 && i <= 76 then 0x10 else 0
+            | Regex @"hcl:#([0-9a-f]{6})$"  [ma] -> // printfn "hcl: %A %A" ma s
+                                                    0x20
             | Regex @"ecl:(...)$"  [ma] -> match ma with
-                                             | "amb" -> 0x80
-                                             | "blu" -> 0x80
-                                             | "brn" -> 0x80
-                                             | "gry" -> 0x80
-                                             | "grn" -> 0x80
-                                             | "hzl" -> 0x80
-                                             | "oth" -> 0x80
-                                             | _ -> 0
-            | _  -> 0 // Regex @"cid:.*" -> 0
+                                             | "amb" -> 0x40
+                                             | "blu" -> 0x40
+                                             | "brn" -> 0x40
+                                             | "gry" -> 0x40
+                                             | "grn" -> 0x40
+                                             | "hzl" -> 0x40
+                                             | "oth" -> 0x40
+                                             | _ -> printfn "no match: %A %A" ma s
+                                                    0
+            | Regex @"pid:([\d]{9})$"  [ma] -> 0x80
+            | _  -> printfn "no match: %A " s
+                    0 // Regex @"cid:.*" -> 0
+
             
         // let fields = s.Split(":")
         // let token = fields.[0]
@@ -213,3 +217,32 @@ let rec monovalidate2 (s:string) =
         //      then 0x80
         //      else 0 ) 
     
+
+
+let rec sub_validate2 passport accum =
+   match passport with
+       | h::tail  -> // printfn "sub validate %A" h
+                     sub_validate2 tail (accum  ||| (monovalidate2 h))
+       | []  -> printfn "end of passport 0x%02X %s " accum ( if (accum &&& 0xFE) = 0xFE then "2good" else "2bad" )
+                accum
+   accum
+
+ 
+let rec validate2 input paccum =
+    match input with
+        | ""::tail -> sub_validate2 paccum 0 
+                      validate2 tail []
+                      // printfn "a blank line"
+                      ()
+        | h::tail  -> validate2 tail (h::paccum)
+                      // printfn "a passport line: %A " h
+                      ()
+        
+        | []       -> printfn "end of list"
+        
+
+// Part1
+validate1 ( lines |> Seq.toList ) ["fred"] 
+
+// Part2
+validate2 ( lines |> Seq.toList ) ["fred"] 
