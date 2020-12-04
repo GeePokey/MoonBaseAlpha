@@ -1,4 +1,4 @@
-printfn "Advent of Code Day 3"
+printfn "Advent of Code 2020 Day 2"
 // Day 3
 let lines = System.IO.File.ReadAllLines("input.day2.txt") 
 // printfn "%A" lines
@@ -19,9 +19,10 @@ let is_valid (case1: Rule) =
 
 let is_valid2 (case1: Rule) =
     (if case1.rpassword.[case1.rmin - 1] = case1.rletter then not else id )
-           (case1.rpassword.[case1.rmax - 1] = case1.rletter)
+         (case1.rpassword.[case1.rmax - 1] = case1.rletter)
 
 // for j in ra do printfn "%A %A" j (is_valid2 j)
 
 printfn "Part1 %d " ( ra |> Seq.filter is_valid  |> Seq.length )
 printfn "Part1 %d " ( ra |> Seq.filter is_valid2 |> Seq.length )
+
