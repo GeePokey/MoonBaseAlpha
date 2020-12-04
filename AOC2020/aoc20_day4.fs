@@ -26,26 +26,21 @@ let monovalidate (s:string) =
 
 
 
-let rec sub_validate passport accum =
+let rec sub_validate passport accum monofunc =
    match passport with
        | h::tail  -> // printfn "sub validate %A" h
-                     sub_validate tail (accum  ||| (monovalidate h))
-       | []  -> printfn "end of passport 0x%02X %s " accum ( if (accum &&& 0xFE) = 0xFE then "good" else "bad" )
-                accum
-   accum
+                     sub_validate tail (accum  ||| (monofunc h)) monofunc
+       | []  -> // printfn "end of passport 0x%02X %s " accum ( if (accum &&& 0xFE) = 0xFE then "good" else "bad" )
+                if (accum &&& 0xFE) = 0xFE then 1 else 0
+
 
  
-let rec validate1 input paccum =
+let rec validate1 input paccum total monofunc =
     match input with
-        | ""::tail -> sub_validate paccum 0 
-                      validate1 tail []
-                      // printfn "a blank line"
-                      ()
-        | h::tail  -> validate1 tail (h::paccum)
-                      // printfn "a passport line: %A " h
-                      ()
-        
-        | []       -> printfn "end of list"
+        | ""::tail -> validate1 tail []  (total + (sub_validate paccum 0 monofunc )) monofunc
+        | h::tail  -> validate1 tail (h::paccum) total monofunc
+        | []       -> total
+
         
 
 
@@ -242,7 +237,10 @@ let rec validate2 input paccum =
         
 
 // Part1
-validate1 ( lines |> Seq.toList ) ["fred"] 
+printfn "Part1 %d " ( validate1 ( lines |> Seq.toList ) ["fred"] 0 monovalidate)
 
 // Part2
+printfn "Part2 %d " ( validate1 ( lines |> Seq.toList ) ["fred"] 0 monovalidate2)
+
+
 validate2 ( lines |> Seq.toList ) ["fred"] 
