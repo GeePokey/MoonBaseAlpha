@@ -102,29 +102,23 @@ let rec monovalidate2 (s:string) =
     then s.Split(" ") |> Seq.map monovalidate2 |> Seq.sum
     else
         match s with
-            | Regex @"byr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 1920 && byri <= 2002 then 0x2 else 0
-            | Regex @"iyr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 2010 && byri <= 2020 then 0x4 else 0
-            | Regex @"eyr:(\d\d\d\d)" [byr] -> let byri = int byr
-                                               if byri >= 2020 && byri <= 2030 then 0x8 else 0
-            | Regex @"hgt:(\d\d\d)cm" [cm] -> let cmi = int cm
-                                              if cmi >= 150 && cmi <= 193 then 0x10 else 0
-            | Regex @"hgt:(\d\d)in"  [ma] -> let i = int ma
-                                             if i >= 59 && i <= 76 then 0x10 else 0
-            | Regex @"hcl:#([0-9a-f]{6})$"  [ma] -> // printfn "hcl: %A %A" ma s
-                                                    0x20
-            | Regex @"ecl:(...)$"  [ma] -> match ma with
-                                             | "amb" -> 0x40
-                                             | "blu" -> 0x40
-                                             | "brn" -> 0x40
-                                             | "gry" -> 0x40
-                                             | "grn" -> 0x40
-                                             | "hzl" -> 0x40
-                                             | "oth" -> 0x40
-                                             | _ -> // printfn "no match: %A %A" ma s
-                                                    0
-            | Regex @"pid:([\d]{9})$"  [ma] -> 0x80
+            | Regex @"byr:(\d\d\d\d)" [byr] when byr > "1919" && byr < "2003" ->  2 
+            | Regex @"iyr:(\d\d\d\d)" [byr] when byr > "2009" && byr < "2021" ->  4
+            | Regex @"eyr:(\d\d\d\d)" [byr] when byr > "2019" && byr < "2031" ->  8
+            | Regex @"hgt:(\d\d\d)cm" [byr] when byr > "149"  && byr < "194"  ->  0x10
+            | Regex @"hgt:(\d\d)in"   [byr] when byr > "58"   && byr < "77"   ->  0x10
+            | Regex @"hcl:#([0-9a-f]{6})$"  [ma]                              ->  0x20
+            | Regex @"ecl:(...)$"     [ma]  -> match ma with
+                                                | "amb" -> 0x40
+                                                | "blu" -> 0x40
+                                                | "brn" -> 0x40
+                                                | "gry" -> 0x40
+                                                | "grn" -> 0x40
+                                                | "hzl" -> 0x40
+                                                | "oth" -> 0x40
+                                                | _ -> // printfn "no match: %A %A" ma s
+                                                       0
+            | Regex @"pid:([\d]{9})$"  [ma]                                  -> 0x80
             | _  -> // printfn "no match: %A " s
                     0 // Regex @"cid:.*" -> 0
 
