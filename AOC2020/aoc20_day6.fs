@@ -1,42 +1,36 @@
 printfn "Advent of Code 2020 Day 6"
 // Day 6
-// let lines = System.IO.File.ReadAllLines("input.day6.txt") 
+let lines = System.IO.File.ReadAllLines("input.day6.txt") 
 // let lines = System.IO.File.ReadAllLines("D4_kinput.txt") 
-let lines = System.IO.File.ReadAllLines("input.txt")
-// let lines = System.IO.File.ReadAllLines("sample.day6.txt") 
+// let lines = System.IO.File.ReadAllLines("input.txt")
+//let lines = System.IO.File.ReadAllLines("sample.day6.txt") 
 // printfn "%A" lines
 
 let len = lines |> Seq.length
 let width = lines.[0] |> Seq.length
 
 
-
-let monovalidate (s:string) =
-     // printfn " monovalidate %A %A %A " s ( s.Contains("byr:") )      (if s.Contains "byr:" then 0x02 else 0 ) 
-     (if s.Contains "cid:" then 0x01 else 0 ) |||
-     (if s.Contains "byr:" then 0x02 else 0 ) |||
-     (if s.Contains "iyr:" then 0x04 else 0 ) ||| 
-     (if s.Contains "eyr:" then 0x08 else 0 ) ||| 
-     (if s.Contains "hgt:" then 0x10 else 0 ) ||| 
-     (if s.Contains "hcl:" then 0x20 else 0 ) ||| 
-     (if s.Contains "ecl:" then 0x40 else 0 ) ||| 
-     (if s.Contains "pid:" then 0x80 else 0 ) 
-
-
-
-let rec sub_validate passport accum monofunc =
-   match passport with
+        
+let rec sub_validate groupcustomform  accum  =
+   match groupcustomform with
        | h::tail  -> // printfn "sub validate %A" h
-                     sub_validate tail (accum  ||| (monofunc h)) monofunc
-       | []  -> // printfn "end of passport 0x%02X %s " accum ( if (accum &&& 0xFE) = 0xFE then "good" else "bad" )
-                if (accum &&& 0xFE) = 0xFE then 1 else 0
+                     sub_validate tail (Set.union  (h |> Set.ofSeq ) accum )
+       | []  -> accum.Count
 
 
  
-let rec validate1 input paccum total monofunc =
+let rec validate1 input (groupquestionsaccum: string List) total  =
     match input with
-        | ""::tail -> validate1 tail []  (total + (sub_validate paccum 0 monofunc )) monofunc
-        | h::tail  -> validate1 tail (h::paccum) total monofunc
+        | ""::tail -> validate1 tail [] (total + (sub_validate  groupquestionsaccum Set.empty ) )
+        | h::tail  -> validate1 tail (h::groupquestionsaccum) total 
+        | []       -> total
+
+
+let rec validate2 input (groupquestionsaccum: string List) total  =
+    // printfn "%A %A %A" input groupquestionsaccum total
+    match input with
+        | ""::tail -> validate2 tail [] (total + (groupquestionsaccum |> Seq.map Set.ofSeq |> Set.intersectMany ).Count )
+        | h::tail  -> validate2 tail (h::groupquestionsaccum) total 
         | []       -> total
 
         
@@ -122,13 +116,82 @@ let rec monovalidate2 (s:string) =
 
 
 // Part1
-printfn "Part1 %d " ( validate1 ( lines |> Seq.toList ) ["fred"] 0 monovalidate)
+printfn "Part1 %d " ( validate1 ( lines |> Seq.toList ) []  0 )
+
 
 // Part2
-printfn "Part2 %d " ( validate1 ( lines |> Seq.toList ) ["fred"] 0 monovalidate2)
-
-
-printfn " Part 1 %d () 9: PM " 0
-printfn " Part 2 %d () 9: PM " 0
+printfn "Part2 %d " ( validate2 ( lines |> Seq.toList )  [] 0 )
 
 printfn "\n"
+
+
+(*
+   guess 1 wrong
+
+   Advent of Code 2020 Day 6
+Part1 6487 
+ Part 1 0 () 9: PM 
+ Part 2 0 () 9: PM 
+
+
+        0.10 real         0.07 user         0.01 sys
+
+Compilation finished at Sun Dec  6 02:39:32
+Advent of Code 2020 Day 6
+Part1 6487 
+ Part 1 0 () 9: PM 
+ Part 2 0 () 9: PM 
+
+
+        0.10 real         0.07 user         0.01 sys
+
+Compilation finished at Sun Dec  6 02:39:32
+
+   That's not the right answer; your answer is too low. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 6487.) [Return to Day 6]
+
+
+// forgot the blank line at the end of input - I need to fix the reader loop.
+   
+That's the right answer! You are one gold star closer to saving your vacation. [Continue to Part Two]
+
+-*- mode: compilation; default-directory: "~/MoonBaseAlpha/AOC2020/" -*-
+Compilation started at Sun Dec  6 02:42:17
+
+make -k aoc20_day6.exe
+/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc aoc20_day6.fs
+Microsoft (R) F# Compiler version 4.1
+Copyright (c) Microsoft Corporation. All Rights Reserved.
+time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono aoc20_day6.exe
+Advent of Code 2020 Day 6
+Part1 6506 
+ Part 1 0 () 9: PM 
+ Part 2 0 () 9: PM 
+
+
+        0.10 real         0.08 user         0.01 sys
+
+Compilation finished at Sun Dec  6 02:42:20
+
+
+-*- mode: compilation; default-directory: "~/MoonBaseAlpha/AOC2020/" -*-
+Compilation started at Sun Dec  6 03:03:43
+
+make -k aoc20_day6.exe
+/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc aoc20_day6.fs
+Microsoft (R) F# Compiler version 4.1
+Copyright (c) Microsoft Corporation. All Rights Reserved.
+time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono aoc20_day6.exe
+Advent of Code 2020 Day 6
+Part1 6506 
+Part2 3243 
+
+
+        0.10 real         0.08 user         0.01 sys
+
+Compilation finished at Sun Dec  6 03:03:47
+
+
+That's the right answer! You are one gold star closer to saving your vacation.
+
+You have completed Day 6! You can [Share] this victory or [Return to Your Advent Calendar].
+   *)
