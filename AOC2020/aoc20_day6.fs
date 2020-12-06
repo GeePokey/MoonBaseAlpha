@@ -10,6 +10,24 @@ let len = lines |> Seq.length
 let width = lines.[0] |> Seq.length
 
 
+// Improved Part1 after submit:
+let rec validate1 input (groupquestionsaccum: string List) total  =
+    match input with
+        | ""::tail -> validate1 tail [] (total + (groupquestionsaccum |> Seq.map Set.ofSeq |> Set.unionMany ).Count )
+        | h::tail  -> validate1 tail (h::groupquestionsaccum) total 
+        | []       -> total
+
+
+// Part 2
+let rec validate2 input (groupquestionsaccum: string List) total  =
+    // printfn "%A %A %A" input groupquestionsaccum total
+    match input with
+        | ""::tail -> validate2 tail [] (total + (groupquestionsaccum |> Seq.map Set.ofSeq |> Set.intersectMany ).Count )
+        | h::tail  -> validate2 tail (h::groupquestionsaccum) total 
+        | []       -> total
+
+
+// Orig part 1
         
 let rec sub_validate groupcustomform  accum  =
    match groupcustomform with
@@ -19,21 +37,11 @@ let rec sub_validate groupcustomform  accum  =
 
 
  
-let rec validate1 input (groupquestionsaccum: string List) total  =
+let rec validate1_orig input (groupquestionsaccum: string List) total  =
     match input with
-        | ""::tail -> validate1 tail [] (total + (sub_validate  groupquestionsaccum Set.empty ) )
-        | h::tail  -> validate1 tail (h::groupquestionsaccum) total 
+        | ""::tail -> validate1_orig tail [] (total + (sub_validate  groupquestionsaccum Set.empty ) )
+        | h::tail  -> validate1_orig tail (h::groupquestionsaccum) total 
         | []       -> total
-
-
-let rec validate2 input (groupquestionsaccum: string List) total  =
-    // printfn "%A %A %A" input groupquestionsaccum total
-    match input with
-        | ""::tail -> validate2 tail [] (total + (groupquestionsaccum |> Seq.map Set.ofSeq |> Set.intersectMany ).Count )
-        | h::tail  -> validate2 tail (h::groupquestionsaccum) total 
-        | []       -> total
-
-        
 
 
 // Part1
