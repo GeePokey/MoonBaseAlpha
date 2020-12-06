@@ -1,5 +1,5 @@
-
-
+import time
+tstart = time.time()
 def readInput():
     with open(r"C:\Users\Kody\GitExperiment\MoonBaseAlpha\AOC2020\D3_kinput.txt", "r",) as f:
     # with open(r"C:\Users\Kody\GitExperiment\MoonBaseAlpha\AOC2020\input.day3.txt", "r",) as f:
@@ -72,13 +72,14 @@ print(result)
 slopes = [(1,1),(3,1),(5,1),(7,1),(1,2)]
 def multslopes(listOfSlopes):
     total = 1
+    input = readInput()
     for i in listOfSlopes:
-        input = readInput()
+        input = input[:]
         # print("i",i,"input",input)
         total *= oneloop(input,i)
     return total
 print(multslopes(slopes))
 line = '...#...#....#....##...###....#.', '#.#...#...#....#.........#..#..'
-
-
+runtime = time.time() - tstart
+print(f"Run time: {runtime:.5f}") #0.00600
 # print(line[1][0])
