@@ -3,7 +3,8 @@ printfn "Advent of Code 2020 Day 7"
 let lines = System.IO.File.ReadAllLines("input.day7.txt") 
 // let lines = System.IO.File.ReadAllLines("D4_kinput.txt") 
 // let lines = System.IO.File.ReadAllLines("input.txt")
-// let lines = System.IO.File.ReadAllLines("sample.day7.txt") 
+// let lines = System.IO.File.ReadAllLines("sample.day7.txt")  // 32 bags
+// let lines = System.IO.File.ReadAllLines("sample2.day7.txt")  // 126 bags
 // printfn "%A" lines
 
 
@@ -17,6 +18,8 @@ dark olive bags contain 3 faded blue bags, 4 dotted black bags.
 vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.
 faded blue bags contain no other bags.
 dotted black bags contain no other bags.
+
+In this example, a single shiny gold bag must contain 126 other bags.
 *)
 
 type Bag = string
@@ -34,8 +37,7 @@ let input2 = "dotted black bags contain no other bags."
 let nob = "(\w+\s\w+)\sbags contain no other bags."
 
 let m2 = Regex.Match(input2, nob)
-printfn "%A" (if m2.Success then Some(List.tail [ for g in m2.Groups -> g.Value ])
-                            else None)
+// printfn "%A" (if m2.Success then Some(List.tail [ for g in m2.Groups -> g.Value ]) else None)
 
 
 // let input = "vibrant plum bags contain 5 faded blue bags, 6 dotted black bags."
@@ -64,7 +66,7 @@ Some ["vibrant plum"; "5"; "faded blue"; ""; ""; ""; ""; ""; ""; ""; ""]
 let mutable containers = Map.empty<Bag,Bag list>
 
 for r in lines do
-    printfn "line %A " r
+    // printfn "line %A " r
 //    let nob = Regex.Match(input, nobagpattern)
     let m = Regex.Match(r, pattern )
     if m.Success
@@ -76,12 +78,12 @@ for r in lines do
             then containers <- containers.Add( g, container :: containers.[g] )
             else containers <- containers.Add( g, [container] )
             
-printfn "%A" containers
+// printfn "%A" containers
 
 let mutable answer = Set.empty
 
 let rec find_all_nest_containers containerlist =
-    printfn "CL %A" containerlist
+    // printfn "CL %A" containerlist
     match containerlist with
         | h::tail -> answer <- answer.Add( h )
                      if  (containers.ContainsKey h)
@@ -92,7 +94,7 @@ let rec find_all_nest_containers containerlist =
         | [] -> ()
 
 find_all_nest_containers  containers.["shiny gold"]
-printfn "containing folders %A" (answer |> Seq.length )
+printfn "Part 1 containing folders %A (131)" (answer |> Seq.length )
 
 
 (*
@@ -106,3 +108,47 @@ containing folders 131  Correct!!
 Compilation finished at Sun Dec  6 23:15:40
 
 *)
+
+
+
+
+
+
+let mutable nestcontainers = Map.empty<Bag,count_bag list>
+
+for r in lines do
+//    printfn "line %A " r
+//    let nob = Regex.Match(input, nobagpattern)
+    let m = Regex.Match(r, pattern )
+    if m.Success
+    then
+        let skip::container::tail =  [ for g in m.Groups -> g.Value ]
+        nestcontainers <- nestcontainers.Add( container , [] )
+        let rec split list =
+            match list with
+                | ""::""::tail -> split tail
+                | a::b::tail -> // printfn "%A %A" a b
+                                nestcontainers <- nestcontainers.Add( container , { count = (int a); btype = b } :: nestcontainers.[container] )
+                                split tail
+                | a::tail -> printfn "FAIL error: %A %A" r tail
+                | [] -> ()
+        split tail
+            
+// printfn "%A" nestcontainers
+
+
+let rec find_all_held_by_gold (baglist:count_bag list)  : int =
+    // printfn "CL %A " baglist 
+    match baglist with
+        | {btype="";count=0}::tail -> find_all_held_by_gold tail 
+        | h::tail  -> if  (nestcontainers.ContainsKey h.btype)
+                      then
+                          let subaccum = find_all_held_by_gold nestcontainers.[h.btype]  
+                          // printfn "%A subaccum  %d count %d pretot %d" h.btype subaccum  h.count ((subaccum + 1) * h.count)
+                          (subaccum + 1) * h.count + (find_all_held_by_gold tail )
+                      else
+                          h.count + find_all_held_by_gold tail 
+        | [] -> 0
+
+let result = find_all_held_by_gold nestcontainers.["shiny gold"] 
+printfn "part 2 Gold bag holds : %A (11261)" result
