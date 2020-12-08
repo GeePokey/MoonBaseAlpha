@@ -28,9 +28,6 @@ type rule = { bagcolor:Bag; count_bag: count_bag list }
 type containedby = { bagcolor:Bag; bigbags: Bag list }
 
 
-
-
-
 open System.Text.RegularExpressions
 let input2 = "dotted black bags contain no other bags."
 
