@@ -5,7 +5,13 @@ printfn "Advent of Code 2020 Day 10"
 // let lines1 = System.IO.File.ReadAllLines("input.day10.txt")
 
 // let lines1 = System.IO.File.ReadAllLines("sample.day10.txt")
-let lines1 = System.IO.File.ReadAllLines("sample2.day10.txt")
+// let mydev = 22 // sample
+
+// let lines1 = System.IO.File.ReadAllLines("sample2.day10.txt")
+// let mydev = 52 // sample2
+
+let lines1 = System.IO.File.ReadAllLines("sample3.day10.txt")
+let mydev = 14 // sample2
 
 // let lines = Array.concat [ [| 0 |] ; Array.map int lines1 ]
 let lines =  Array.map int lines1 
@@ -94,6 +100,10 @@ let is_valid ( data : int list )  =
      // printfn "%A" ( data |> Seq.windowed 2 ) 
      data |> Seq.windowed 2 |> Seq.forall  (fun c -> c.[1] - c.[0] <= 3)
 
+let is_valid10 ( data : int list )  =
+     // printfn "%A" ( data |> Seq.windowed 2 ) 
+     if (data |> Seq.windowed 2 |> Seq.forall  (fun c -> c.[1] - c.[0] <= 3)) then 1 else 0
+
 // printfn "is valid %A " (is_valid slines 0 (endi-1))
 
 // let rec brute_force data i j =
@@ -103,18 +113,20 @@ let is_valid ( data : int list )  =
 //     else
 //          0
 
-// let mydev = 22 // sample
-let mydev = 52 // sample2
 let rec gen_seq (data :int list) = seq {
-    if data.Length = 1
+    if is_valid data
     then
-       yield data.[0]::[mydev;]
-       yield [mydev;]
+        if data.Length = 1
+        then
+           yield data.[0]::[mydev;]
+           yield [mydev;]
+        else
+           for i in gen_seq data.[1..] do
+              yield i
+              yield data.[0] :: i
     else
-       for i in gen_seq data.[1..] do
-          yield i
-          yield data.[0] :: i
-    }
+        yield [-99;99]
+        }
 
 // for i in slines do
 //    printfn "%A" i
@@ -123,10 +135,17 @@ let rec gen_seq (data :int list) = seq {
 //     let testlist = j
 //     printfn "%A %A" testlist (is_valid testlist)
 
+
 for j in gen_seq ( slines |> Array.toList ) do
     let testlist = 0::j
     if is_valid testlist then printfn "%A %A" testlist (is_valid testlist)
-    
+
+let mini_brute data =
+    //    printfn "%A" (gen_seq data |> Seq.map (fun ll -> 0::ll) )
+    gen_seq data |> Seq.map (fun ll -> 0::ll) |>  Seq.sumBy is_valid10
+
+printfn "%d" (mini_brute (slines |> Array.toList))
 
 
     
+
