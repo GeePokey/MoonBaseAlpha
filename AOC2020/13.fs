@@ -2,192 +2,152 @@ printfn "Advent of Code 2020 Day 13"
 // Day 13
 
 
-let filespec = "sample.day13.txt"
+
 // let filespec = "sample2.day13.txt"
 // let filespec = "input.day13.txt"
-let lines = System.IO.File.ReadAllLines(filespec) |> Array.toList
-// let lines =  Array.map int lines1 
+// let lines1 = System.IO.File.ReadAllLines(filespec) 
+// let lines =  Array.map (fun c -> if c = "x" then 0 else (int c) ) lines1 
 
 // let lines = lines1 |> Array.map (fun c -> c.ToCharArray() )
 
 
-// printfn "%A" lines
-
-
-open System.Text.RegularExpressions
-
-let (|Regex|_|) pattern input =
-    let m = Regex.Match(input, pattern)
-    if m.Success then Some(List.tail [ for g in m.Groups -> g.Value ])
-    else None
-
-let rec travel code x y d =
-      match code with
-        | h::tail -> match h with
-                       | Regex @"N(\d+)" [parm] -> travel tail x (y - (int parm)) d
-                       | Regex @"S(\d+)" [parm] -> travel tail x (y + (int parm)) d 
-                       | Regex @"W(\d+)" [parm] -> travel tail (x - (int parm)) y d
-                       | Regex @"E(\d+)" [parm] -> travel tail (x + (int parm)) y d
-                       | Regex @"R(\d+)" [parm] -> travel tail x  y (((d + (int parm)) + 720) % 360 ) 
-                       | Regex @"L(\d+)" [parm] -> travel tail x  y (((d - (int parm)) + 720) % 360 ) 
-                       | Regex @"F(\d+)" [parm] -> match d with
-                                                    |   0 -> travel tail (x + (int parm)) y d // east
-                                                    |  90 -> travel tail x (y + (int parm)) d // south
-                                                    | 180 -> travel tail (x - (int parm)) y d // west
-                                                    | 270 -> travel tail x (y - (int parm)) d // north
-                                                    | _ -> printfn "ERROR: bad direction %s %d" h d
-                                                           x, y
-                       | _ -> printfn "ERROR: bad instruction"
-                              x, y
-        | _ -> x, y
 
 
 
-// // Stealing from Marshall's degrees to absolute direction recursion - works!
-// let rec travel code x y d =
-//       match code with
-//         | h::tail -> match h with
-//                        | Regex @"N(\d+)" [parm] -> travel tail x (y - (int parm)) d
-//                        | Regex @"S(\d+)" [parm] -> travel tail x (y + (int parm)) d 
-//                        | Regex @"W(\d+)" [parm] -> travel tail (x - (int parm)) y d
-//                        | Regex @"E(\d+)" [parm] -> travel tail (x + (int parm)) y d
-//                        | Regex @"R(\d+)" [parm] -> travel tail x  y (((d + (int parm)) + 720) % 360 ) 
-//                        | Regex @"L(\d+)" [parm] -> travel tail x  y (((d - (int parm)) + 720) % 360 ) 
-//                        | Regex @"F(\d+)" [parm] -> match d with
-//                                                     |   0 -> travel (("E"+parm)::tail) x y d
-//                                                     |  90 -> travel (("S"+parm)::tail) x y d   // tail x (y + (int parm)) d // south
-//                                                     | 180 -> travel (("W"+parm)::tail) x y d   //  tail (x - (int parm)) y d // west
-//                                                     | 270 -> travel (("N"+parm)::tail) x y d   // tail x (y - (int parm)) d // north
-//                                                     | _ -> printfn "ERROR: bad direction %s %d" h d
-//                                                            x, y
-//                        | _ -> printfn "ERROR: bad instruction"
-//                               x, y
-//         | _ -> x, y
+let goal = 1000391
+let busids = [| 13 ;17;19;23;29;37;383;41;457|]
 
-let final = travel lines 0 0 0
-printfn "Part1 %s %A %d (820) " filespec final ((abs (fst final)) + (abs (snd final)))
+// let filespec = "sample.day13.txt"
+// let goal = 939
+// let busids = [|7;13;59;31;19|]
+
+// printfn "%A" busids
+
+
+let lm x =
+    let s = goal / x
+    if (s * x) = goal then goal,x else ( s + 1 ) * x,x
+
+let sorted = busids |> Array.map lm |> Array.sort
+
+let answer=((fst sorted.[0]) - goal ) * (snd sorted.[0])
+
+// printfn "Part1_%s: Answer %d %A  (1915)" filespec answer sorted
 
 (*
- Advent of Code 2020 Day 12
-input.day12.txt (74, 746) 820
-        0.16 real         0.14 user         0.01 sys
-
-Compilation finished at Fri Dec 11 22:53:12
-
-                                                      *)
-
-let sgn x = match x with
-               | z when z < 0 -> -1
-               | z when z > 0 -> +1
-               | 0 -> 0
-               | _ -> 0
+           That's not the right answer. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 1000396.) [Return to Day 13]
 
 
-        
-        // match sgn dx, sgn dy with
-        //     |  1,  1 -> Rtator md x y (x - dy)  (y + dx)
-        //     | -1,  1 -> Rtator md x y (x - dy)  (y + dx)
-        //     | -1, -1 -> Rtator md x y (x - dy)  (y + dx)
-        //     |  1, -1 -> Rtator md x y (x - dy)  (y + dx)
-        //     |  1,  0 -> Rtator md x y  x  (y + dx)
-        //     | -1,  0 -> Rtator md x y  x  (y + dx)
-        //     |  0,  1 -> Rtator md x y (x - dy)  y
-        //     |  0, -1 -> Rtator md x y (x - dy)  y
-        //     |  0,  0 -> Rtator md x y x  y
+Compilation started at Sat Dec 12 21:12:27
+
+make -k 13.exe
+/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc 13.fs
+Microsoft (R) F# Compiler version 4.1
+Copyright (c) Microsoft Corporation. All Rights Reserved.
+time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono 13.exe
+Advent of Code 2020 Day 13
+[|13; 17; 19; 23; 29; 37; 383; 41; 457|]
+Part1_sample.day13.txt: Answer 1000396 [|1000396; 1000399; 1000400; 1000402; 1000406; 1000407; 1000408; 1000413;
+  1000830|]  ()
+        0.11 real         0.09 user         0.01 sys
+
+Compilation finished at Sat Dec 12 21:12:30
 
 
-// printfn "-\n"
+           sample works now
+make -k 13.exe
+/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc 13.fs
+Microsoft (R) F# Compiler version 4.1
+Copyright (c) Microsoft Corporation. All Rights Reserved.
+time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono 13.exe
+Advent of Code 2020 Day 13
+[|7; 13; 59; 31; 19|]
+Part1_sample.day13.txt: Answer 295 [|(944, 59); (945, 7); (949, 13); (950, 19); (961, 31)|]  ()
+        0.12 real         0.10 user         0.01 sys
 
-// printfn "%A" (Rtator   0 0 0 10 10)
-// printfn "%A" (Rtator  90 0 0 10 10)
-// printfn "%A" (Rtator 180 0 0 10 10)
-// printfn "%A" (Rtator 270 0 0 10 10)
-// printfn "%A" (Rtator 360 0 0 10 10)
-
-// printfn "-\n"
-// printfn "%A" (Rtator   0 1000 0 1010 0)
-// printfn "%A" (Rtator  90 1000 0 1010 0)
-// printfn "%A" (Rtator 180 1000 0 1010 0)
-// printfn "%A" (Rtator 270 1000 0 1010 0)
-// printfn "%A" (Rtator 360 1000 0 1010 0)
-
-// printfn "-\n"
-
-// printfn "%A" (Ltator   0 0 0 10 10)
-// printfn "%A" (Ltator  90 0 0 10 10)
-// printfn "%A" (Ltator 180 0 0 10 10)
-// printfn "%A" (Ltator 270 0 0 10 10)
-// printfn "%A" (Ltator 360 0 0 10 10)
-// printfn "-\n"
-// printfn "%A" (Ltator   0 1000 0 1010 0)
-// printfn "%A" (Ltator  90 1000 0 1010 0)
-// printfn "%A" (Ltator 180 1000 0 1010 0)
-// printfn "%A" (Ltator 270 1000 0 1010 0)
-// printfn "%A" (Ltator 360 1000 0 1010 0)
-// printfn "-\n"
+Compilation finished at Sat Dec 12 21:16:32
 
 
+make -k 13.exe
+/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc 13.fs
+Microsoft (R) F# Compiler version 4.1
+Copyright (c) Microsoft Corporation. All Rights Reserved.
+time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono 13.exe
+Advent of Code 2020 Day 13
+[|13; 17; 19; 23; 29; 37; 383; 41; 457|]
+Part1_sample.day13.txt: Answer 1915 [|(1000396, 383); (1000399, 17); (1000400, 41); (1000402, 13); (1000406, 37);
+  (1000407, 19); (1000408, 23); (1000413, 29); (1000830, 457)|]  ()
+        0.12 real         0.10 user         0.01 sys
 
-let rec Rtator degrees x y wx wy =
-    if degrees = 0 then (wx, wy)
-    else
-        let md = degrees - 90
+Compilation finished at Sat Dec 12 21:17:10
+           
+           *)
 
-        let dx = wx - x
-        let dy = wy - y
-        Rtator md x y (x - dy)  (y + dx)
+// part 2
+// let busids = [| 13 ;17;19;23;29;37;383;41;457|]
+// let filespec = "input.day13.txt"           
+let busdeps = [|"19";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"37";"x";"x";"x";"x";"x";"383";"x";"x";"x";"x";"x";"x";"x";"23";"x";"x";"x";"x";"13";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"x";"29";"x";"457";"x";"x";"x";"x";"x";"x";"x";"x";"x";"41";"x";"x";"x";"x";"x";"x";"17" |]
 
-let rec Ltator degrees x y wx wy = Rtator (360-degrees) x y wx wy
+let filespec = "sample.day13.txt"
 
-
-let rec travelp2 (code : string list) x y wx wy =
-    
-    // printfn "%3d %3d %3d %3d : %5s"  x y wx wy    (if code.IsEmpty then "[]" else code.Head)
-    match code with
-        | h::tail -> match h with
-                       | Regex @"N(\d+)" [parm] -> travelp2 tail x y wx               (wy - (int parm)) 
-                       | Regex @"S(\d+)" [parm] -> travelp2 tail x y wx               (wy + (int parm)) 
-                       | Regex @"W(\d+)" [parm] -> travelp2 tail x y (wx - (int parm)) wy 
-                       | Regex @"E(\d+)" [parm] -> travelp2 tail x y (wx + (int parm)) wy 
-                       | Regex @"L(\d+)" [parm] -> let wx,wy = Ltator (int parm) x y wx wy
-                                                   travelp2 tail x y wx wy
-                       | Regex @"R(\d+)" [parm] -> let wx,wy = Rtator (int parm) x y wx wy
-                                                   travelp2 tail x y wx wy
-                       | Regex @"F(\d+)" [parm] -> let dx = (wx - x) * (int parm)
-                                                   let dy = (wy - y) * (int parm)
-                                                   travelp2 tail (x+dx) (y+dy) (wx+dx) (wy+dy)
-                       | _ -> printfn "ERROR: bad instruction"
-                              x, y
-        | _ -> x, y
-
-let fx1,fy1 = travelp2 lines 0 0 10 -1
-let fx = abs fx1
-let fy = abs fy1
-printfn "part2 %s (%d %d) (%d %d) = MD %d (66614) " filespec fx1 fy1 fx fy (fx + fy)
-
-
+// let busdeps = [|"7";"13";"x";"x";"59";"x";"31";"19" |]
 (*
- part2 sample.day12.txt (214, 72) 286
- 0.18 real         0.15 user         0.01 sys
-
-Compilation finished at Sat Dec 12 00:13:36
-
-
-
-========================================================================================
-    
--32041 34573 -32069 34524 :    []
-part2 input.day12.txt (-32041, 34573) 2532
-        0.95 real         0.19 user         0.02 sys
-
-Compilation finished at Sat Dec 12 00:14:30
-
-That's not the right answer; your answer is too low. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 2532.) [Return to Day 12]
-
--32041 34573 -32069 34524 :    []
-part2 input.day12.txt (-32041 34573) (32041 34573) = MD 66614
-        1.19 real         0.20 user         0.02 sys
-
-Compilation finished at Sat Dec 12 00:20:15
-
+The earliest timestamp that matches the list 17,x,13,19 is 3417.
+67,7,59,61 first occurs at timestamp 754018.
+67,x,7,59,61 first occurs at timestamp 779210.
+67,7,x,59,61 first occurs at timestamp 1261476.
+1789,37,47,1889 first occurs at timestamp 1202161486.
 *)
+
+// let busdeps = [|"67";"7";"59";"61"|] //  first occurs at timestamp 754018.
+
+// let busdeps = [|"67";"x";"7";"59";"61"|] // first occurs at timestamp 779210.
+
+// let busdeps = [|"67";"7";"x";"59";"61"|] //  first occurs at timestamp 1261476.
+
+// let busdeps = [|"1789";"37";"47";"1889"|] // first occurs at timestamp 1202161486.
+
+let businput = seq {
+    let mutable offset = -1
+    for b in busdeps do
+       offset <- offset + 1
+       if b = "x"
+       then () // yield 0,0
+       else yield (int b), offset
+
+   }
+
+let b2 = businput |> Seq.toList   
+
+for i in businput do
+    if (fst i) > 0 then printfn "%A" i
+
+let z64 = int64 0
+let is_valid (bi: (int*int) list) (x:int64) = bi |> List.forall (fun (bid, tick) -> (x + int64 tick) % (int64 bid) = z64 )
+
+// printfn "%A" b2
+// let _is_valid (bi: (int*int) list) (x :int64) =
+//     let mutable result = true
+//     for bid,tick in bi do
+//         printfn "%d %d %A" bid tick (x + int64 tick)
+//         if (x + int64 tick) % (int64 bid) = (int64 0) then () else result <- false
+//     result
+
+let maxbid = int64 (b2 |> List.map (fun c -> (fst c) ) |> List.max )
+let mutable maxtick = int64 0
+for bid,tick in b2 do
+    if (int64 bid) =  maxbid then maxtick <- int64 tick
+
+printfn "Max Busid   %d , %d " maxbid maxtick
+
+
+let minfor = 99999999999551L
+// let limitfor = (int64 210000000000000L)
+let limitfor = minfor + 10000000000L
+for (i:int64) in minfor..maxbid..limitfor do
+    // printfn "%d" i
+    if is_valid b2 (i - maxtick)
+    then printfn "part2: input %A (1068781) FOUND" (i - maxtick)
+
+printfn "is_valid %A %d " (is_valid b2 1068781L)  (1068781 % 59)
+printfn "Part2_%s: Answer %d %A   ()" filespec answer businput
