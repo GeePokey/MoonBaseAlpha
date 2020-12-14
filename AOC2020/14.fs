@@ -128,15 +128,29 @@ let rec travel code (mask:int64 * int64) =
 
 travel lines (0L,0L) // Part 1
 
-vmem <- new Dictionary<int64,int64>()
+
+
+
+
+
+
+
+// Constants
 let Zero64 = int64 0
 let One64 = int64 1
+
+vmem <- new Dictionary<int64,int64>()  // Reset the memory array.
+
 
 let nth_bit_of n (addr:int64) =
     ( addr >>> n ) &&& (int64 1)
     
-let rec vmem_mask_write addr sval (maskstr: char list)  addrmaskval =
-    // printfn "   vmem_mask_write %X %d %X %A len %d bit %d" addr sval addrmaskval ( if maskstr.IsEmpty then '_' else maskstr.Head) maskstr.Length (nth_bit_of (-1 + Seq.length maskstr) addr)
+let rec vmem_mask_write addr value (maskstr: char list)  addrmaskval =
+    // printfn "   vmem_mask_write %X %d %X %A len %d bit %d" addr value addrmaskval ( if maskstr.IsEmpty then '_' else maskstr.Head) maskstr.Length (nth_bit_of (-1 + Seq.length maskstr) addr)
+
+    // Take one character from front of maskstr, and append one bit to addrmaskval for each recursion.
+    // When maskstr is empty, write the value to the calculated addrmaskval.
+    
     match maskstr with
         | h::tail  ->  let addrmaskval = (addrmaskval <<< 1) + (match h with
                                                                 | '1' -> One64
@@ -145,11 +159,13 @@ let rec vmem_mask_write addr sval (maskstr: char list)  addrmaskval =
                                                                 | _ -> printfn "ERROR: bad mask maskstr %A" maskstr
                                                                        Zero64
                                                                )
-                       vmem_mask_write addr sval tail addrmaskval
-                       if h = 'X' then vmem_mask_write  addr sval tail (addrmaskval ||| One64)
+
+                       // Recurse with both '0' and '1' variations if the current mask is X
+                       vmem_mask_write addr value tail addrmaskval
+                       if h = 'X' then vmem_mask_write  addr value tail (addrmaskval ||| One64)
                        
-        | _        ->  vmem.[addrmaskval] <- sval
-                       // printfn "vmem_mask_write %X %d ACTUAL\n" addrmaskval sval
+        | _        ->  vmem.[addrmaskval] <- value
+                       // printfn "vmem_mask_write %X %d ACTUAL\n" addrmaskval value
             
 
 let rec travel2 code (mask:string) =
@@ -157,8 +173,8 @@ let rec travel2 code (mask:string) =
         | h::tail -> // printfn "%A" h
                      match h with
                        | Regex @"mask\s*=\s*([X01]+)" [maskv] -> travel2 tail maskv
-                       | Regex @"mem\s*\[([\d]+)\]\s*=\s*([0-9]+)" [addr;sval] -> vmem_mask_write (int64 addr) (int64 sval) (mask |> Seq.toList)  0L
-                                                                                  travel2 tail mask
+                       | Regex @"mem\s*\[([\d]+)\]\s*=\s*([0-9]+)" [addr;value] -> vmem_mask_write (int64 addr) (int64 value) (mask |> Seq.toList)  0L
+                                                                                   travel2 tail mask
                        | _ -> printfn "ERROR: non code %s" h
         | _  -> printfn "part2_%s: %A (3219837697833)" filespec (vmem.Values |> Seq.sum)
 
