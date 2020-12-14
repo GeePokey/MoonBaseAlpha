@@ -133,27 +133,23 @@ let is_valid (bi: (int64*int64) list) (x:int64) = bi |> List.forall (fun (bid, t
 //         if (x + int64 tick) % (int64 bid) = (int64 0) then () else result <- false
 //     result
 
-let submain minfor limitfor stepper =
-    // let maxbid = int64 (b2 |> List.map (fun c -> (fst c) ) |> List.max )
-    // let mutable maxtick = int64 0
-    // for bid,tick in b2 do
-    //     if (int64 bid) =  maxbid then maxtick <- int64 tick
-
-    let maxbid = int64 383
-    let maxtick = int64 19
+let submain minfor limitfor =
+    let maxbid = int64 (b2 |> List.map (fun c -> (fst c) ) |> List.max )
+    let mutable maxtick = int64 0
+    for bid,tick in b2 do
+        if (int64 bid) =  maxbid then maxtick <- int64 tick
 
     printfn "Max Busid   %d , %d " maxbid maxtick
-    printfn "range \nmin %A\nmax %A\nstep%A" minfor limitfor stepper
+    printfn "range \n%A\n%A  " minfor limitfor
 
-    
     //    let minfor = 99999999999551L + 8399999999774L // add 10 minutes that we already ran
     // let limitfor = (int64 210000000000000L)
     //     let limitfor = minfor + 120000000000000L
-    for (i:int64) in minfor..stepper..limitfor do
-        //        printfn ">>>%d" i
+    for (i:int64) in minfor..maxbid..limitfor do
+        // printfn "%d" i
         if is_valid b2 (i - maxtick)
         then printfn "part2: input %A (1068781) FOUND" (i - maxtick)
-        if i % (stepper * 1000000000L)  = z64 then printfn "%A" i
+        if i % 119999999592L  = z64 then printfn "%A" i
 
     printfn "is_valid %A %d " (is_valid b2 1068781L)  (1068781 % 59)
     printfn "Part2_%s: Answer %d %A   ()" filespec answer businput
@@ -162,6 +158,6 @@ let submain minfor limitfor stepper =
 [<EntryPoint>]
 let main args =
     printfn "Arguments passed to function : %A" args
-    if args.Length > 0 then submain (int64 args.[0])  (int64 args.[1])   (int64 args.[2])
+    if args.Length > 0 then submain (int64 args.[0])  (int64 args.[1])
     // Return 0. This indicates success.
     0

@@ -1,0 +1,4 @@
+mask = XXXXXXXXXXXXXXXXXXXXXXXXXXXXX1XXXX0X
+mem[8] = 11
+xmem[7] = 101
+xmem[8] = 0
