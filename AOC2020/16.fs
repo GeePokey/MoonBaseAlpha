@@ -13,15 +13,20 @@ let lines = System.IO.File.ReadAllLines(filespec) |> Array.toList
 
 // printfn "%A" lines
 
-
+open System
+open System.IO
 open System.Text.RegularExpressions
+
+
+let splitBy (c : string) f (str : string) = str.Split([| c |], StringSplitOptions.None) |> f
+    
 
 let (|Regex|_|) pattern input =
     let m = Regex.Match(input, pattern)
     if m.Success then Some(List.tail [ for g in m.Groups -> g.Value ])
     else None
 
-let validate_ticket (rules : (int*int*int*int) list) a b c =
+let validate_ticket (rules : (int*int*int*int) list) (fs:int []) =
     
      let sub  a (r1, r2, r3, r4) = (r1 <= a && a <= r2) || (r3 <= a && a <= r4) 
 
@@ -30,8 +35,8 @@ let validate_ticket (rules : (int*int*int*int) list) a b c =
      let goodvalue q = rules |> List.exists (sub q)
      let badvalue q = not (goodvalue q)
 
-     let z = ( if badvalue a then a else 0 ) + ( if badvalue b then b else 0 )+ ( if badvalue c then c else 0 )
-     printfn "%d %d %d => %d  " a b c z 
+     let z = fs |> Array.sumBy (fun a -> if badvalue a then a else 0 )
+     printfn "%d <= %A   " z fs
      z
 
 let dump_rules rules = for i in rules do
@@ -45,11 +50,23 @@ let rec handle_input codes rules (accum : int ) =
                        | "your ticket:" -> handle_input tail rules accum
                        | "nearby tickets:" -> dump_rules rules
                                               handle_input tail rules accum
-                       | Regex @"(\d+),(\d+),(\d+)" [a;b;c] -> let subaccum = validate_ticket rules (int a) (int b) (int c)
+                       | Regex @"([0-9,]+)"  [str]         ->  let fields = (h.Split( [|","|], StringSplitOptions.None )) |> Array.map int
+                                                               let subaccum = validate_ticket rules fields
                                                                handle_input tail rules (accum + subaccum)
                        | _ -> handle_input tail rules accum
                        
         | _ -> accum
 
 
-printfn "handle_input %A " ( handle_input lines [] 0 )
+printfn "handle_input %A (22000)" ( handle_input lines [] 0 )
+
+(*
+
+part1 440; 788; 662; 555; 834; 527; 434;
+  853; 854; 374; 555|]   
+handle_input 22000 
+        2.18 real         0.52 user         0.02 sys
+
+Compilation finished at Tue Dec 15 22:27:09
+
+*)
