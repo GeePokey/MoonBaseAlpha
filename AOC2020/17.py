@@ -99,5 +99,6 @@ for i in range(7):
     dump_u(u,i)
     u = cycle(u)
 
-    
-            
+# part1 Cycle  6 242
+# Compilation finished at Wed Dec 16 21:54:42
+
