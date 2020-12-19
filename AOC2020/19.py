@@ -7,7 +7,7 @@ xinputd = """0: 1 2
 3: "b"
 """
 
-inputd = """0: 4 1 5
+xinputd = """0: 4 1 5
 1: 2 3 | 3 2
 2: 4 4 | 5 5
 3: 4 5 | 5 4
@@ -21,7 +21,7 @@ aaabbb
 aaaabbb
  """
 # again
-inputd = """42: 9 14 | 10 1
+xinputd = """42: 9 14 | 10 1
 9: 14 27 | 1 26
 10: 23 14 | 28 1
 1: "a"
@@ -69,6 +69,8 @@ aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
 babaaabbbaaabaababbaabababaaab
 aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
 
+"""
+"""
 mine
  
 bbabb  	bbaab  	aabba
@@ -312,8 +314,13 @@ def part2():
 #      r11 = r11 + "|("   + r42 * i + r31 * i + ")"
 
 
+   # r42 = "bbaab"
+   # r31 = "aabba"
+ 
 
-   r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,2))
+   r42 = '(%s)'% r42
+   r31 = '(%s)'% r31 
+   r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,9))
    
  # part 2
  # 8: 42 | 42 8
