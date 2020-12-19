@@ -351,13 +351,14 @@ def part2():
        if mm :
            print "+\t",m
            for g in mm.groups():
-               print " \t",g
+               # print " \t",g
                pass
        else:
            print "-",m
            
    print
-   print "part 2 (12) ", sum( 1 for m in messages if myre.match(m))
+   #    print "part 2 (12 sample) ", sum( 1 for m in messages if myre.match(m))
+   print "part 2 (367) ", sum( 1 for m in messages if myre.match(m))
    print "r42 ", r42
    print "r31 ", r31
 
@@ -366,3 +367,10 @@ part2()
 # print " max(len(m) for m in messages)", max(len(m) for m in messages)
 # print "".join(sorted(" r42:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a"))
 # aaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbr
+
+"""
+part 2 (12)  367  GOLD STAR 
+
+Compilation finished at Sat Dec 19 01:40:10
+
+"""
