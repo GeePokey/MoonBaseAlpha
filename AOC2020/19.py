@@ -7,7 +7,7 @@ xinputd = """0: 1 2
 3: "b"
 """
 
-xinputd = """0: 4 1 5
+inputd = """0: 4 1 5
 1: 2 3 | 3 2
 2: 4 4 | 5 5
 3: 4 5 | 5 4
@@ -20,10 +20,74 @@ abbbab
 aaabbb
 aaaabbb
  """
+# again
+inputd = """42: 9 14 | 10 1
+9: 14 27 | 1 26
+10: 23 14 | 28 1
+1: "a"
+11: 42 31
+5: 1 14 | 15 1
+19: 14 1 | 14 14
+12: 24 14 | 19 1
+16: 15 1 | 14 14
+31: 14 17 | 1 13
+6: 14 14 | 1 14
+2: 1 24 | 14 4
+0: 8 11
+13: 14 3 | 1 12
+15: 1 | 14
+17: 14 2 | 1 7
+23: 25 1 | 22 14
+28: 16 1
+4: 1 1
+20: 14 14 | 1 15
+3: 5 14 | 16 1
+27: 1 6 | 14 18
+14: "b"
+21: 14 1 | 1 14
+25: 1 1 | 1 14
+22: 14 14
+8: 42
+26: 14 22 | 1 20
+18: 15 15
+7: 14 5 | 1 21
+24: 14 1
 
+abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
+bbabbbbaabaabba
+babbbbaabbbbbabbbbbbaabaaabaaa
+aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+bbbbbbbaaaabbbbaaabbabaaa
+bbbababbbbaaaaaaaabbababaaababaabab
+ababaaaaaabaaab
+ababaaaaabbbaba
+baabbaaaabbaaaababbaababb
+abbbbabbbbaaaababbbbbbaaaababb
+aaaaabbaabaaaaababaa
+aaaabbaaaabbaaa
+aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+babaaabbbaaabaababbaabababaaab
+aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
+
+mine
+ 
+bbabb  	bbaab  	aabba
+bbabbbbaabaabba
+
+bbabb  	bbaab bbaab aabba aabba
+bbabbbbaabbbaabaabbaaabba
+
+"""
+
+
+ # part 2
+ # 8: 42 | 42 8
+ # 11: 42 31 | 42 11 31
+ #
+ 
 inputl = inputd.split("\n")
 rules = [i for i in inputl if ":" in i]
-messages = [i for i in inputl  if not(":" in i)]
+messages = [i for i in inputl  if len(i)>0 and not(":" in i)]
 
 # print rules
 print "\nMessages\n"
@@ -51,21 +115,23 @@ def expand_rule(k):
     return "".join(( "(?:" + expand_rule(j) + ")" for j in rd[k].split(" ") ))
 
             
-    
-z = expand_rule("0")
-z = z.replace("(?:|)","|").replace('(?:a)', 'a').replace('(?:b)','b').replace('(?:a)', 'a').replace('(?:b)','b') + "$"
-print z
-import re
-re = re.compile(z)
+def part1():    
+   z = expand_rule("0")
+   z = z.replace("(?:|)","|").replace('(?:a)', 'a').replace('(?:b)','b').replace('(?:a)', 'a').replace('(?:b)','b') + "$"
+   # print z
+   import re
+   re = re.compile(z)
 
-for m in messages:
-    if re.match(m):
-        print "+",m
-    else:
-        print "-",m
-        
+   for m in messages:
+       if re.match(m):
+           print "+",m
+       else:
+           print "-",m
+           
 
-print "part 1 (173) ", sum( 1 for m in messages if re.match(m))
+   print "part 1 (173) ", sum( 1 for m in messages if re.match(m))
+
+# part1()
 
 """
 (* attempt 1
@@ -87,10 +153,6 @@ Compilation exited abnormally with code 1 at Fri Dec 18 21:30:10
 
 attempt 2
 
-['', 'abbbaaaaaabbbaabababaaab', 'bbbaaababbaabbaabbbabbaa', 'aababbaaabbbababbaaaaaabbbbababb', 'bababbbabaaabbbabbbaaaaa', 'abaaababaabbbbbabaaabaab', 'aabababbbbababbbbbbaabaa', 'aabbbaabbbaabbaabaaaabbbbbabbbbbaaabbabb', 'bbabababaabbbaabbaabaaab', 'baababaaabaaaaaaabbabababbaabbaaaaabbaabbaaaabaaabbaabaaababbbaaabbbaaaabaaabbaabaaabbbb', 'bbbbbababbbababaaaaabbba', 'bbaaabbaaaabbbbbbbabbbaa', 'abbaabbabbabaaabaaababab', 'bbbbaabbbaaaabbabaaaabbabaaaaaababbbbbbabbabbabbbbbbbbbb', 'aabaaababaaabbbaababbbaa', 'aabaaabbabbbaabbbbaaaaabbabbabba', 'aabbaaaaaaabbbbbaaabbaab', 'bbabbaabbaaaaaaabaababbb', 'bbaabaabaababbaaaaabbbaabbbbbaaaaabaaabababaababababaababbbbaaaaaaaabbba', 'ababbbaababbbbaaabaaabbbbbbabaababaabababbbbabbbbbbbaaba', 'aabbbaababaabaabbababbaaabbbaaaabbaabbabbbaaabaa', 'bbabaaabababbbbbaaaabaab', 'bababbaabbbbabaabaaaabbbabbbbbaababbbbbbaabaabaa', 'baaaabbabababbbbbbabbbbbaabbabaaabbabbabbbbbbbbb', 'aaababbaaababbbabaaaaaabaaabbaaabbabbbbbaababbbb', 'baabaaabababbbabaaabaaab', 'bababbbbaaabbabaaaabbabb', 'babaabaabbaaaaabaaabbbbabbbaabbb', 'ababaabababbbaaababaabbb', 'abbbababbabbbabbbabbbababaababba', 'abaabababbbbbbababababab', 'bbabbbbbbbbbbbabaabaaaab', 'baaabbbaaabbababbabbbbaa', 'aabbabbbaabbaabbaaaabbba', 'aabababbaabbabbaabaabbbb', 'bababbbaababaabaaabbabbb', 'abbbbabbaabbbbbabbbabaaaababbbbaaaabaababbbbaaaabbbbababbabbaaaaabababbbbaabbbbaabbbbbba', 'bbbbaaabaabbaabbbbaabaab', 'abababaaaaaaaabaaaaaabbaabbbabbbaabbbaabababbbbb', 'abbaaabbbbbabbbbaaabaabb', 'aaabbaaabababbbabbbbbbbaaabbbbbabbaabbbaaaabbbaabbbaabba', 'bbaabbaaaaabaaaabaaabbabbaabbbbabbaaabbbabaaaaaaaaabbaabbbaababa', 'aaaababbaabbbbbbbaabababbabbbbba', 'aaaaaabaabababbbbababaaabbbaabba', 'aaabbbaabaabbaabaaaabbbb', 'bababaaabbbbbbbabbbbaabababaaabbaababbbbabbaaaab', 'baaaaaaaabbbaababbbababbaabababbbbabbaabbbbbaaaa', 'aabbbbbbaababaaaaabbbaba', 'abaaaababbaabbbaaaaaaabbbaabababaabbabbbbaababbb', 'abaaaababbbbbaaaabaabbbb', 'baaabbbabaaabbabaabbaaab', 'aaabaaaabbaaaaabbabababa', 'aabbbaababbaababbaaaaaba', 'baababaaaabaabaaaaaaaaab', 'bbaaaaababaaababaaabbaab', 'bbaabbbaaabaaabaabbbbbaabbbaaabaaaaabababaaabaab', 'bbabababbaaaaaabbabaabababbbbbaa', 'babbaabbaabbbbbaaabbbaba', 'bbbababababaababaaaababa', 'aaabaaabaabbaababababbbaaaababaabababbabaaaabaabbbabaabb', 'aabbbbbbbbaababbbbaababa', 'bbabbbabbbababbbbbaaaaba', 'babbbabbaabbabbbababaaba', 'bbaaaaaababbaaaabbaaaaabbaabbabbabbbbbabbaaaaaaabbaabbbaabbbaaba', 'bbabbbbbbaaabbaabbbaabba', 'abaaabababaaaabaaaababbaabbababb', 'bbbbbaaababbbbbbaabbbabb', 'abaaaaaaaaabaababaaaabaa', 'aababbaabaaabaaaaaabbbaababbbaaaaabaaaaa', 'bababbbaabbbbababbaabaabababbaab', 'abbabbaaaabaaabbbbbaaaaa', 'bbbbabaabaaabaaabbbaabab', 'aaaababbaabbabababbaaaaa', 'bbbbbababbbbabbaababbaab', 'aabbabbaaabbaaaaababaaba', 'abbbaaabbbaabbbabaaaaaabbbbbabbaaaababaabababbaabaababbb', 'bbabbaaaaaabaaabaaabbaabbbbbbaaaabbaababaabaaaabaabbaaaababababaaababbabbabaaabb', 'aaaabbabbbbbabbabbbabbbbbbaababbabbbbaabaaabbbbbababbaab', 'aabbbaaabbaabbbabbbbbbababaabbab', 'bbababbbaabbaabbabaabbaa', 'bbbbabbbababbbaabaaaaabbbabbabbaaaabbbbbaaabaaaaababaabbababbaaabaaabaaa', 'abbaabbabbbaaababaaabbabbaabaaaa', 'aaaababbbbbabaaabaaabbbbbaabbbaabbaaaaabababaaabbaaaaaaa', 'bbbbbbabbbabaabbbabaaaaa', 'baaabbbaaaaaabbabbaaabbaabbbbaaaabaabbaa', 'abbabababbababaaaababbbababbbbaa', 'abbbaaaabbabababbaaabbabaabaaaaa', 'bbbbbababaaabbabbbbbbaba', 'baabbbbababbbbbbaaabaabaaaaabaaabbabbbbbabbbbaaaaaabaabb', 'baabbaabaabaaabbbaaabbbb', 'bbbaaabbbaaabbababaaabbb', 'aabbbbbaaaaaaabbbaabbbaaaababbbaaaaaabbb', 'bababaabaabbbaaabbbaabab', 'aaaaaabbabbbbabaabaabaaabbbbbbabbabaabbaabbbbbbbbaaabbbb', 'bbaabbabaaabaaaaabbbaababababbbbbbbaabababaabbbabaaaaaba', 'aababaabababbbaaaaaaaaaa', 'babbaabbbbbabbbababababbbabbbbbabbbbabbbbbaabbbbaaaabbbabaabbbabbabaabab', 'abaabaaabbaabaababaababb', 'abbbababaabbbbbbaabaabab', 'babbbababbabbbbbbaaabaaaabaabbabaabbbabb', 'bbaabbbaaaabbbaaababaabb', 'baaabaaaabaabaaaaaababaa', 'ababaaaabaabbbaaabbaaabaabababab', 'baaaabbababbbaabaaabbbbaabbabbaabbabaabbabbbbbbaaaaababaababbbabbabaaaaa', 'bbaaaaabbbabaaaaabaabaaaaaabaababaaabbbabbaababbaabaabbaabaaabbababbbbba', 'bbbabbabbbabbbaabaabaaaababaaabbabaaaabbbbbababb', 'bbaabbbabbaabbabbbaaabbbabbaaaaaabaaabbaabbaaaaa', 'abbbaabbbbbaaababbabbbaa', 'babaabababbbabbabbbaaabaaaababab', 'bbabaabbbbabaaaaababbaaabbbaaabbbabaabaabbbbababbbbabbabbaaabbbbbaababaa', 'abbbbbaaabaabaaabaaaaaabbabbbaabbabbbaabaabaabaabbabbaaa', 'bbbaaabaabaabababaabaabb', 'babaabaabaaabbaabbbbabbaaaaabbabaabaabab', 'aabbababbaabaabbababaabaabbbbbbbabbabbbaababbbbbabaaabababaabbabbbabaabbbaaaabaa', 'babbababbbaababbabbbbbba', 'abbbbabbabbabbbbbbaaaabbabbaaaaabbbbabbbabbbbababbbbabaaabaabbbb', 'abbbaabaabbbaaabbaaaabab', 'bbbbabaababbaabbaabbaabbbbbbbaabababaaab', 'abbbaababaaabaaaababbaab', 'abababbaababbbbbaaaabaaaaabbaaaabaaabaab', 'aaaaaabbabbbaaabbbbbbabbbbbbbabbababaabbbbaabaaa', 'abaababaabaaaaaaaaaaaabbabaaaabb', 'baabbaabaaaaababbaaabaaaaabaaabaababababbbbbabbb', 'baaabbabbbbbababbbbaaaabbabaabbbabaabbaabbaabababbabaabbabbbbaabbabaaaba', 'aaaabbabaaababbabbabaabbbbabaaabbbbbaaabaaababbaabbbbbbb', 'baabbbbabaaaabbabaaaaaabaabbaaaabaabababbaaababb', 'bababbaabbabaabbaaaaaaaa', 'abbbabbbabbbaaaaababaabb', 'abaaaabaabbaaabbbbababbbabbaabbaabaababbaaaaaaab', 'bbaaaaabbbbbbbbabbbaaabababaaabbbbabbbba', 'bbbbaabbaabbbbbbbaabbbab', 'bababbbbbbabaabbbababaaabbbbbaab', 'bbaaabbaabbbaaaaaabbbaba', 'aaaaabbabbbaaabbbbaabbbaababababbaaababb', 'aabaabbbaaaaaaabababbbabbabbaababaababbbaabaabbabaaababb', 'abbaaabbbabaababaaabbbaababaabba', 'aaabbbaaabababbbbaaababa', 'bababbbbaaababbbaaabaabb', 'abbabbbbbaabbbbabaaabaab', 'aaababbbabbaabaabaaaabaababababb', 'bbaabbbabbaababbbbbababababbbbba', 'bbbabaaaabbabbaaabbbbaaaababbabbbaababba', 'bababaabbabbbbbbbabbbbba', 'abaabbaaaabbabaaabababbaaaaabababaababbbbaabababaabbbababbbaabaaaabbbabbbbbbbbabaabaaaabababbabb', 'aaabbabbbabbbabbbbaaaaaaaabbbababbbbbabababaabbaaaabababbbbbabababbbbbbbbbabbabbbaabaaaa', 'baabbbbaaabbbaabbabaaaaa', 'aabbaaaaaababbaaaababbaaaabbaaaaaabaabaa', 'bbbbbbbabbbababaabbaaabbbaaaabaababbbbab', 'baaabaaabaaaaaabaaaababbaabbbabbbbbbbbaa', 'bbbbbabaabaabababbbbbbbb', 'baaaabbaabaabababaababbb', 'abbbaabbbaaabbaabababbbbaabaabaa', 'aabaabaaabaaaabaaabbabaaaaabaaaabababaab', 'babbbabbbaabbababbbbbabbabbabbab', 'abaaabaabbaabbabbbabaabbbaaaaaba', 'abababbbbbabaabbbababbbaaaababab', 'aabaaabbbbbbbbbaabaababb', 'babbabbbabaababbaaabababaabaabbababaabbb', 'bababaaabaaaabbabbabbbabaabbabbaabbbabbbaabababaaabaababaaaabaab', 'bbaabbbabbababaaaaabaaaaaaaaaaaa', 'abbbaabbabbbbaaababbabaa', 'bbabbaababbaabbaabababbbbaabbaaaaababbab', 'bbbabbbaabbbbababaaabbabbabaabba', 'baabaababbabbbbbbbbaababbaaababbbbabaaba', 'ababaabbaaaaaaabaaaaaabaabbbbaaabbabbaabbabbaabababbababbaababba', 'babbaabbabbbbbaabbaaabbababbbaabaabaaaab', 'ababbaaababbbaabbaaabaab', 'aaabbbaabbabbaabbbabaabbaabbabbbbababbbaaababbabaaabaaababaaaaab', 'baabbbbbbbbaaabbbbbbbbaa', 'aaabbaaaabbabbbbbbbbbabbbbbbbbaaabaabbaa', 'babbbbbbaaabbbbbbabbbaaa', 'baabaababbbbabbaaabaabaa', 'aabbbbbbbbabbbbbbbbbbbbb', 'aaaaabbababbbabaaabababa', 'aabbabababbbaabbababbaab', 'bbabbbaaaabbbabbbbabbbabaaaabbabababaaba', 'bbabbbbbbbbbbbabababbbab', 'abbbababaabbbaabbaababaa', 'abbabbbbbbaabaabbbbbbbbb', 'aababaabbabababababaaabaaaabaabbbabbababbaababaa', 'baaaabbaaabaaabbaabbabaabbabaaaababbbbabbaababaababbbbaa', 'bbaabbaaaaabbbaaaababbab', 'abbbabbbaabbabbbbaaaaaba', 'ababbaaababbababbaabbaaabbaaaabb', 'baabbbabbabaaabbabbbaaabbbbaaaaaababbbbbbababaabaaabababaaaaabbaababbbaabaababba', 'abaaaaaaabababbbbaababaa', 'baabbbaabbaababbababaabb', 'aabbbbababababaaabaaaabbabaabbaaabbabaaaaabbbbbaabaaaabbaaababbbbabbaaaa', 'abababbabbaabbaabbbbabab', 'bbaaaaabbaabbaabbbaabbabbabbbaaa', 'bbbabaaabbababbbaabbbaabaaaabbbb', 'babbaabbabababababbaaabbababbbaaabaaabbbaabaaaaa', 'abbbaaaabbaabbaababababa', 'baaaaaabbbaabaabbbbabbbbaaaaaabaabbbbaaabbbaaaab', 'bbbaabbababababbbbaaabab', 'aabbaaaabbabbaabaabbbaaaaaaaaabbbbaaaaaabaaaabababbbbbba', 'aababbbabaaaaaaaabaaaabb', 'baaaabbabbbbabaabbbabaab', 'baabbbaababbaabbbbaaaaaa', 'babbbababaaabaaaaaababab', 'abbabbbbabbaabbaabbbaaaaabbbbabababaaaaa', 'bbbabbbbbabbbbbbbbbaabaa', 'aabbbbbbbbbbaabbaabaaabaabaababb', 'abababbbbaaaabbaaaaabbaa', 'baabbaaabbbabbbbabbbbabb', 'bbbaaababaabbababaabaababbbbbbaa', 'aaababaabababaabbababbaaaabaaabbaabbaaaababbbbba', 'aaaaaababbabaabbbbabbaba', 'baaaaaabbbabbbababbababb', 'bababbbaaaabbbbaaabbaaaaabaaaabbbabababa', 'babaabaaabbbaaaababbbaababaaabaababbbaabbabaabbbbbaaaabb', 'abbbbaaabbabbaabbabbbababbababababbaaababbbabbaaaaaaaaab', 'abbabababaabbabbaabbbbaa', 'bbaabbbabababaabbabaaabaababaaababaaabbb', 'bbbabaaaabaaabbbaababaaaaaaaaaabaaabaaab', 'baabbaabaabaaabbbbabaaabbbaabbbbbaababbb', 'babbbbbbabaaababbbaabbabbbbbbbaa', 'bbabaaabbbbbbababbabbbaa', 'bbaaabbbbbabbbbbabbbabaa', 'abbbabbbabbababaabaababb', 'bbbbbbbabbabbaababbbbabb', 'baabbababbaaaaabbbbbbaaaaaababaaababbbbbbbabaaaababbaaaa', 'bbbabbbbababbbbbaabbbbbbabaabbbb', 'babbabbaabaabbabababaabbaababbab', 'aaabaaaabbabbbbbaaabbbbaabbabbaaababaaab', 'aaaabbabbbbaaabbaababaab', 'aaaabaaabaabbabaaababbab', 'abbabbaaaaababaaaaabbbbaabbbaabbaabbbaba', 'ababbabababbabbbbbbbaaabbabababbabaaabba', 'bbaababbabbbbabababaabba', 'abbaabaababaaabababaabaabbaaabbbababbbaabbaaabbababaaaaaabbabaababaabbaababbbbbbababbaaa', 'bbbbbaaaabaababaabbaaaba', 'aaaaabbababbbaabaabbbaaababbababaaababaaaaaaabbbbaaaabab', 'aabbaabbbbababababbabababbbaaaabaabaaaaa', 'babbaabbabbbaaabababbabb', 'abbababaabababbaaababbaaaaabaaaabaabbbbbaabbaaba', 'abbbbaaabbbaaabaaaaaaabababababa', 'abbbaababbbbbbbaabbbaabbaabbabbbbbaaaaaaaaaabbaaabbabbba', 'abbbaaabaaababaaabbbaaaaabbababaaaaabaaaabbababbbabababa', 'bababbaababbabbbabbbbaaababbabaaaabaabaa', 'abbbababaaaababbbbbaabab', 'bbaaabbbabbaaabbbabababb', 'bbbbaaaabaaaaabbbababaaabaabaabbbbbbbbab', 'aaaaaababaabbabbbaaabbbb', 'bbbbbababaaaaaaaaaabbaab', 'aabbbaababababbabaabbaba', 'bbbaaababbabaaabbababbbaababaaaaabbabaabababbabb', 'ababbbbababbbabbaaababaaaabaabab', 'bababaaabaabaabaabaabaaaaaababbabaabbaaabbbbbbbb', 'aabbabbabaaabbaabbbbaaba', 'aaaaaabbbaaabaaababbbaaa', 'aaababbbaabababbbabbaabbbabbaaabaaaaaaaa', 'aaaabbababbbababaabababbabbbaaaabababbbbaaabaababbbabbab', 'babaababababbbbbaaabbabb', 'bbbbaabbbbbbababaababbab', 'babbbbbbaababbaaaababbaabbbbabbaaabaaabbbabababaaaaaaaab', 'aaaaaabbbabaabaabaaabbababaaaabaabbbbabababbbaaa', 'aaabaabbaabbbababaabaaaaababbaabaabaaaaa', 'ababbabababbbbaaaababbab', 'aabaaabbbbaaaaabbababbab', 'aaabaabaaabababbaaabbbab', 'bbabaabbaabbbaaaababaaab', 'bbaabbabbababbaababbaabbabbaababbbbbbaabaabaaaaa', 'abaaababbbababaaabbbbbba', 'aaaabaaabbbbbbbaaabbbaabaabaaaaa', 'bbabbaabaabbbaaabaaabaaababbaaabababbbab', 'bbabbaababbbaababbaaabbbbbababba', 'baaabbbaaabababbabbbbbbb', 'bbababaabaaaabbabbaabbaaaaababbaabbbabbababbbbbaabbbbbbb', 'aaaababbbbbabababaaaabbbbbbbaaba', 'aaababaaaabaaabababaababbabbababbbabaabbaaabbabbbabababbbbaaabaa', 'abababaaabababbbbbbbabbabbbaabbabaaabbbb', 'aabaaababaaaabbabbaaaaabbabaaaaa', 'babbbbbbbbababbbbbbbaaba', 'bababbabbababbbababbbbaa', 'bbaabaababbabbaabbaabaababbabababbaabbbb', 'aaabaabaaabaaababbbabbab', 'bbaabbabbababbabbbbbbbbaaabbbbab', 'bbbbbbbaabababbabbbbbaaaaaabbaaababbbbab', 'abbabbaabaabaabaabbaaaab', 'aabbbaaaabaaabababbbaabbbaaabaab', 'abaaaabaabbbbbaaababbbbabaabbbabaaababaa', 'ababaaaabaaaabbbaaabbaaabbabaaababaaabaabaabaabababababaaaaabbaa', 'aaababbabaabbbaabbaabaababbabbbbbbbbabaabbabbbba', 'bababbabaaabbbbbaababbaaaabbabbaaabaaaab', 'babbabbbababbbbbbbbbbaab', 'bbbaaababbaabbabaaabbbaabbbbabbaabbbaabbbbbbbbbbaaaabbaababbaaaa', 'aaaaaabbbababbbaababaaab', 'bababbbaabbbbbaabababaaaaaaaaababababababbbbbaabbbaabaaa', 'babbbaababbaaabbaabbbaaabbbaaabbaaababaababbbbaa', 'bbabaaabaaaaaabbaabaaaab', 'baaaaaabaaabbbbbbbaaaaabaaababbbaaaaababaabbaaab', 'aaabbaaaabbbaaababbabbab', 'aabbbaabbaabbabbbabbbaaa', 'baabaaaabbbaaaabbbabbaabbaabbaabbabbaabaaababbab', 'abaaaaabaaabbabbabababbbababbaaabbbaabbbbaaaaabaaaaabababbbbaaabaabbbbbb', 'bbabaaabbabbbabbbbaabbabaaaabaaabbaabbbbbaaababb', 'abaabaaaabababbbbababaaaabbbaaaabbbabaaaaaaaabaa', 'aabbabbabbababbbaaabaabb', 'bbababaabaaabaaaabbbaaaabbbabbaaabbbbabb', 'bbbabbabbabbbbbaaababaabbbbabbabbbababbbabbbababbababbabbbabbbbbababbaaababbbbaa', 'bbaababaabbaaaabbaaababb', 'abbababaaaabbbaaaaaababa', 'abbbaaabaaababaabaabbaababaaaabaababbabbbabbaaab', 'ababbababaabbbaabbbaaababaababbbbbaaaaba', 'bababbbbaaaabbababbabbaabababaabaaaabbbababababbaaaaaaab', 'bbbbabaaaabbaabbbbbabbbaaaababaabbbbbbaaaabaabbabbabbabb', 'aaaaaababaabababbbbbaabbbabbabbbbbabbabbbbbbbbaa', 'aaaabbabaaaabaaaabbbbbbb', 'aaaaaabbbbaaabbbbabbabbbaaaabbba', 'bbabaabbababbaaaabbbaaababababaabbbbbbbbaaaabbbaabbabaaa', 'abbbbaabaababbbababbbbba', 'aabbbaaabbaabaabbbaabaaa', 'baaabbabaabaaabbaabbbaabababbbab', 'abaabababbbbabaabbaabaabbaaababa', 'aaabbbbbaabababbbbababba', 'bababbabababaaaaabbbaabbbbabbabbabababab', 'bbaabbabaaaaabababaaabba', 'baabbaababbabbaaababbbbbbabbbabbabaabbaa', 'ababbbbaaababbbaababbaaaaabbababbbbbbbbbbbbbababbabaaaaa', 'bbabaabbbaaabbabbbbaabba', 'bababbbbbbbabbbbaabbbaababbababaabbbbbaaaaabaaab', 'abaabaaabbabababbbaaaaaa', 'bbbaabbbbbbaabbaabbabbab', 'bbabababbbbbbbabaabbbbaa', 'baaabbbababbaabbabbbbbaaaaaaaaabaaabaaab', 'abaaababbbbbbaaaabaaabbb', 'aaabbbbabaabbabbbbabbbbbabbabaaabaaababb', 'babaababababbbbbababaaab', 'abaababaababbababbbbabbb', 'bbbaaabbbababbaaababaabb', 'aaaababbaabbbaaaaabababbabbbbabb', 'abababbbbbbabbbabaabaabb', 'abaaaaaabaaabbaabbaabaabaaabbaababbababb', 'aaaaaaababbaababbaababbbbaabaaabbbababab', 'aaabbbaaaababbbabaaaaaba', 'babbbbbbabaaaaaabaabaaab', 'aaabaabaaabaaabbbbaabbabbaaabbbb', 'baaabbaaaaabaabaaaabaababbbabbbbbabaaaab', 'aaababbabaabaabababaaabaaababbbbbbaabbbb', 'abaaaaaabababbabbbabaabbbbbabaab', 'bbbbbabababbabbbbbaaabab', 'bbaaaaabbaabbaaabababbaababababb', 'aabbbbbbbaaabbabababaaba', 'babbaabbbbabaaaabbbbbbbababbbbaabbaabbbb', 'abbbaaabbaaaabbaaababbbaaabaaabaabaaabababaaabbabbbabbab', 'bbaabbabbbbababaaaabbaaaaaabbabb', 'aaabbbbabaaabaaababbbbba', 'aaabaaaaaabbabbabbabababbabbbaabbbabbbabaabbbbbabbbbaababbbabaab', 'aabbabaababbbabbbbbbabab', 'aabbaabaabbabaabaaabbabbbbbaaaabbabbbbaaabaaabaabbbabbbbaabbababababbabaabaabbaaaaabbbba', 'babbababbabaaabaababbbbabbabaaba', 'abaabbbaabaaaaabbabbbbbabaaababbbbbaaaaa', 'ababbbbaabbbbbaaaabbaaba', 'aabbabbabbbbabbabbabbaba', 'babbbaababbbbaabbaaabbbabbbaabbb', 'bbabaaaabbaabbbaabbaaaaa', 'bbbbbabbbbababaabbbbabbaaaababbbaaabaaba', 'aaaaaabbabbbaaaabbababbbaaaabbba', 'bbbbaabbbbaabbbaaaabbbaaabaaaabbaaaabbba', 'baabababbbbbbaaabaaabbbb', 'aaaaaabbbaaabbbaaaababab', 'baaaaaaabababaaabbaabbbb', 'bbaababbaaabaabaabbabbaaaabbbbbbaaabbabb', 'aaaaabbaaaaababbbaabbbbbabbaaabbabbbabbbabaabbba', 'ababbaaaaabaaabaaabbaabbabbababaabbabbbaaaabaaabbabbbaaa', 'abaabaaaabbbbababbbaabbb', 'baaabbaaababaaaaaababbaaaaaabbaa', 'aaabbaaabbaabbaaaababbbb', 'bbbbbabaaabbbaabaaabbbaabababaaaaaaabbbaabbabbba', 'baaaabbbabaababaaabaaabaabbbabbabbbbbbbb', 'aaaaabbabaabbbbbaabaaababbbbbbabbaaaaaaaaababaaa', 'abaaabaabbabababaaabbaba', 'aaabaababbaababbbbbababb', 'ababbaaababbbabbaaabbbabbaabaaabbabaabbaaaabaaab', 'babaabaaaabbababbbbabaab', 'abaaaaaaabbabbbbbbabbabb', 'baabbaaaaaaabaabbaababaabbbbbbbbbabbaaab', 'baaabaaaabaababababbbbabbaaaabaa', 'aaababbaaabbaaaababababb', 'bababbabaaaababbbababaaabbbbaaaa', 'bbaabaabbaaaabbabaabbbab', 'abbbabbaaaaaabbaabaabbba', 'aabaaababababbbaaabaaabaaabbaaabbaaabbbb', 'bbabababaababbbaabbbababaaabaababbbbbbaa', 'aaaaaabaaaabaaaabbbaaabaabbbbbbb', 'bbaaabbbabbbaabbbabbbabaaabaabbabaababba', 'baaabbaabbaaabbabaaaabbaaababbbaaababaab', 'abaabaababbbbababbbbbaab', 'babababaaaabaabaaaaaaabaabbababbaabbabbaaaaabaab', 'bababbbbbbaaabbaaaababbabbbbaaba', 'abbabbbbabbbabbabaabaabaabaaabaabbbbaababbaaabab', 'babbbabbbbbbbbbaabbabaaa', 'aaaabaaabaababababbbaaabbbabbbabbbbabbbbbbbabbaa', 'bbabaabbaabbabaaaaaababa', 'bababbaaaababbbaabaabbaa', 'babbabababbaabbaabaabbaa', 'baaaabbbbbabaabbbaabaaab', 'abbbaababaaaaaabbbbbbababbbbaaba', 'bbbbabbaabaabaabbabbbbbb', 'babbaaaaaababbbbaaaaaaababaabbab', 'baaaaaaaaabbababaaababaaabaaababbbbbbabaabbbbbaaaabbbbaaabaababbabbaabbbabbbbabb', 'baabbbbbbaabbabbaabbaaab', 'abbbbabaaaabbbbbbaabbbbbaabbabbbbbabaabbbbabaabbaaabaaab', 'aaababbbabbbabbabbbbbbbaaaabbbbaaaabaaab', 'aaabaaaaaaababaaaabbaabbababbabb', 'aaaaaabbababbababbbaabab', 'bbbbbaaaabbaaabbbbababaaaabababbabaaabba', 'babbbabaaaaaaabaaababbabbabbbbbaabbabababbaaaabb', 'babaaababbaaabbaaaabbbaabaaabbbbababaabb', 'abbbaababbbbabbababbababaaaabbaa', 'baabaaabbbaaaabbbbabaaba', 'bbbabbbbabbabbaaaabaabbbaababbaabbabbbbbaaaabbbb', 'bbaaabbbbababbaaabababaaabaaabaababbbabaaaaaaabbbbbaababaabababa', 'bbbaaaabbaaaaababbaaabaaaaabbaab', 'baabbaabaaabaaaabaaabaaabaabbabbaaaaaaabbaababaa', 'baaabaaaababbaaabbbbabbaaabaaabbaaabbbabbbbaaaaa', 'aaabbaaaaabababbbaaaaaba', 'aaaaaabababbbababbbbabbabababaabbbbababbbaabbbab', 'babbaabbbababbaabbbaabaa', 'bababbbbaababaabbabbbbbaabababaabbaaaaababbaabbaaaaaabbbabbabbabbababbaaaaaaaaabababaaab', 'abbababbaabbbbaaabaaababbbaabbabbbbbabba', 'baabbaaabaabbbbaaaabbbbaabaababbbbabbbaa', 'bbbabbbaabbbbaabbbbbbaab', 'aabbbaaaabababbabaabbabbbabaabaaabbabbba', 'aaabaababbaababbaabbaabbababaaaabbababbaaaabbbab', 'abababbababbabbbbabababb', 'bbaaabbbaaaaababbabbabba', 'baaaabbaaaabaabaaaababbbaaaabbba', 'bbbaabbbaaaabaaaaabbbbbbbbaaaaabbbababbbaabaaabaaaaabbaaaaaaaaababaaababbaabaabb', 'bbaabaabbaabbaaabbaaaaba', 'bbbbbbbaabaaaaaaabbabababbababbbabbbbaaababbbbabaaabaabb', 'aababababbbaaaaabbaabaaaabbbbbbb', 'baabaabbaababaabaaaaabbbbbbababbbaaaaaab', 'abbbabbbaaaaaababbabbaba', 'baabbabbbbbaaabaaaabbaaaaabbaabbaababaab', 'baabbaababbbaababbbbbabbabaaabbbababbaab', 'baabaabbbbaabaaabaaababb', 'abaaababaabbabbbaabbbbab', 'aaabbbbabbbbaaabaabbaaab', 'aababbaababbabbbbbabbbbbbaababba', 'bababaaaabbbabbaaababbbaaabaabbbbabbbbaa', 'aabbbaabaaabaabaabaabaabbababaaabaabbababaaabaaababaabba', 'baaaabaaaaabababaababbbaabbbaaabbbbbbbabbbbaaaababbbabaababaaaababbbbaaabaabbabb', 'abaaaabaabbabbaabbabbbbbbbaabbabaaabbaab', 'bbbbbbabaaabbbaabaaaaaba', 'babbbabbaabbaaaabbaaaaabbbaabbbbabaabbba', 'abbbaabbababbaaabaaaaaba', '']
-{'133': '33 97', '132': '36 33 | 58 117', '131': '53 33 | 35 117', '130': '47 33 | 40 117', '137': '33 133 | 117 134', '136': '57 33 | 130 117', '135': '109 117 | 126 33', '134': '117 85 | 33 91', '41': '113 117 | 115 33', '24': '33 117 | 117 94', '25': '118 117 | 65 33', '26': '47 33 | 47 117', '27': '117 60 | 33 1', '20': '46 117 | 67 33', '21': '6 33 | 44 117', '22': '33 108 | 117 97', '23': '33 4 | 117 119', '28': '94 108', '29': '97 117 | 126 33', '0': '8 11', '4': '114 117 | 125 33', '8': '42', '120': '34 33 | 127 117', '121': '117 91 | 33 46', '122': '117 24 | 33 67', '123': '117 24 | 33 40', '124': '117 126 | 33 91', '125': '117 99 | 33 109', '126': '117 117', '127': '24 117 | 35 33', '128': '33 40 | 117 53', '129': '51 33 | 7 117', '59': '117 61 | 33 107', '58': '33 43 | 117 122', '55': '9 117 | 87 33', '54': '88 33 | 72 117', '57': '126 117', '56': '129 33 | 101 117', '51': '117 67 | 33 46', '50': '33 40 | 117 67', '53': '117 33 | 33 33', '52': '33 32 | 117 82', '115': '33 66 | 117 23', '114': '33 53 | 117 91', '88': '24 33 | 46 117', '89': '22 33 | 102 117', '111': '33 91 | 117 109', '110': '33 108 | 117 40', '113': '33 30 | 117 75', '112': '104 117 | 80 33', '82': '124 33 | 76 117', '83': '132 117 | 5 33', '80': '106 33 | 93 117', '81': '117 53 | 33 91', '119': '84 117 | 131 33', '87': '26 33 | 128 117', '84': '33 97 | 117 46', '85': '117 33 | 33 117', '3': '33 128 | 117 29', '7': '108 117 | 53 33', '108': '33 33 | 117 117', '109': '94 33 | 33 117', '102': '108 117 | 99 33', '103': '121 33 | 73 117', '100': '40 33 | 35 117', '101': '84 117 | 123 33', '106': '117 39 | 33 100', '107': '136 33 | 48 117', '104': '33 120 | 117 77', '105': '33 2 | 117 64', '39': '35 94', '38': '108 117 | 24 33', '33': '"a"', '32': '78 33 | 81 117', '31': '33 69 | 117 41', '30': '14 117 | 54 33', '37': '33 16 | 117 90', '36': '17 117 | 44 33', '35': '33 94 | 117 117', '34': '117 46 | 33 53', '60': '47 33 | 126 117', '61': '33 49 | 117 27', '62': '53 117 | 24 33', '63': '68 117 | 111 33', '64': '117 67 | 33 108', '65': '117 96 | 33 74', '66': '33 37 | 117 103', '67': '33 117 | 33 33', '68': '33 99 | 117 35', '69': '117 13 | 33 86', '2': '97 33 | 91 117', '6': '117 40 | 33 47', '99': '117 33 | 117 117', '98': '109 33 | 85 117', '91': '94 94', '90': '97 117 | 67 33', '93': '50 33 | 76 117', '92': '117 109 | 33 67', '95': '117 10 | 33 135', '94': '33 | 117', '97': '33 117', '96': '33 116 | 117 38', '11': '42 31', '10': '40 33 | 109 117', '13': '52 117 | 55 33', '12': '43 33 | 50 117', '15': '117 53', '14': '33 98 | 117 20', '17': '126 33 | 35 117', '16': '97 33 | 53 117', '19': '33 46', '18': '33 112 | 117 83', '117': '"b"', '116': '126 33 | 40 117', '48': '19 117 | 28 33', '49': '110 33 | 62 117', '46': '33 33', '86': '56 33 | 70 117', '44': '46 117 | 40 33', '45': '25 117 | 59 33', '42': '18 33 | 45 117', '43': '33 35 | 117 97', '40': '117 117 | 33 117', '118': '105 33 | 95 117', '1': '91 33 | 24 117', '5': '117 21 | 33 12', '9': '33 79 | 117 72', '77': '117 62 | 33 71', '76': '40 33 | 108 117', '75': '89 117 | 137 33', '74': '33 92 | 117 15', '73': '117 35 | 33 85', '72': '117 126 | 33 108', '71': '117 24 | 33 53', '70': '63 33 | 3 117', '79': '33 40 | 117 46', '78': '33 108 | 117 91', '47': '117 33'}
-
-(?:(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:(?:b))(?:(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))))(?:(?:b))(?:|)(?:(?:(?:(?:b))(?:(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:a)))(?:|)(?:(?:b))(?:(?:(?:(?:(?:(?:(?:b))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a)))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:(?:b))))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b)))(?:(?:a))))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:(?:(?:b))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a))))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b)))))(?:|)(?:(?:a))(?:(?:(?:(?:(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b))))(?:(?:a)))(?:(?:b))))(?:(?:a)))(?:(?:b))))(?:(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:(?:b))(?:(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))))(?:(?:b))(?:|)(?:(?:(?:(?:b))(?:(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:a)))(?:|)(?:(?:b))(?:(?:(?:(?:(?:(?:(?:b))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a)))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:(?:b))))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b)))(?:(?:a))))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:(?:(?:b))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a))))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:(?:b))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:b)))))(?:|)(?:(?:a))(?:(?:(?:(?:(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b))))(?:(?:a)))(?:(?:b))))(?:(?:a)))(?:(?:b)))(?:(?:(?:a))(?:(?:(?:b))(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b)))))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b)))))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:b))(?:(?:(?:b))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b)))))(?:(?:a))(?:|)(?:(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:b))))(?:(?:b))(?:|)(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:a))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:b))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))))(?:(?:b))(?:|)(?:(?:(?:(?:(?:b))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:a)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))(?:(?:b)))(?:(?:a)))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:a)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b))))(?:(?:a)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b))))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b))))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:b))(?:(?:b))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a))))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:b)))(?:(?:a))))(?:(?:b)))(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:a)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:b))(?:(?:(?:a))(?:|)(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:a)))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:(?:b))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b))))(?:(?:b)))(?:(?:a)))(?:|)(?:(?:b))(?:(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:b))))(?:(?:a))(?:|)(?:(?:(?:(?:a))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:(?:a)))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:b)))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:b)))(?:(?:b))(?:|)(?:(?:(?:a))(?:(?:b))(?:|)(?:(?:a))(?:(?:a)))(?:(?:a))))(?:|)(?:(?:b))(?:(?:(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b))))(?:|)(?:(?:a))(?:(?:(?:a))(?:(?:a))))(?:(?:a))(?:|)(?:(?:(?:b))(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:b))))(?:(?:b))))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:(?:(?:a))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:(?:a))(?:|)(?:(?:b)))))(?:(?:b))(?:|)(?:(?:(?:b))(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:b))(?:(?:b)))(?:|)(?:(?:a))(?:(?:(?:(?:a))(?:|)(?:(?:b)))(?:(?:a))(?:|)(?:(?:a))(?:(?:b))))(?:(?:a)))(?:|)(?:(?:b))(?:(?:(?:(?:a))(?:(?:(?:a))(?:(?:b)))(?:|)(?:(?:b))(?:(?:(?:a))(?:(?:a))))(?:(?:b))(?:|)(?:(?:(?:(?:b))(?:(?:a))(?:|)(?:(?:a))(?:(?:a)))(?:(?:a))(?:|)(?:(?:(?:a))(?:(?:(?:a))(?:|)(?:(?:b)))(?:|)(?:(?:b))(?:(?:b)))(?:(?:b)))(?:(?:a)))))(?:(?:a)))))$
 
 
 attempt #3 gold star
@@ -105,4 +167,195 @@ part 1  173
 
 Compilation finished at Fri Dec 18 21:34:58
 
+
+part 2
+
+
+(?:(?:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a))(?:(?:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a)(?:b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))))$
+- 
+- abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
++ bbabbbbaabaabba
+- babbbbaabbbbbabbbbbbaabaaabaaa
+- aaabbbbbbaaaabaababaabababbabaaabbababababaaa
+- bbbbbbbaaaabbbbaaabbabaaa
+- bbbababbbbaaaaaaaabbababaaababaabab
++ ababaaaaaabaaab
++ ababaaaaabbbaba
+- baabbaaaabbaaaababbaababb
+- abbbbabbbbaaaababbbbbbaaaababb
+- aaaaabbaabaaaaababaa
+- aaaabbaaaabbaaa
+- aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+- babaaabbbaaabaababbaabababaaab
+- aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
+- 
+part 1 (173)  3
+((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a)|((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a)((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))|((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))$
+- 
++ abbbbbabbbaaaababbaabbbbabababbbabbbbbbabaaaa
++ bbabbbbaabaabba
++ babbbbaabbbbbabbbbbbaabaaabaaa
++ aaabbbbbbaaaabaababaabababbabaaabbababababaaa
++ bbbbbbbaaaabbbbaaabbabaaa
++ bbbababbbbaaaaaaaabbababaaababaabab
++ ababaaaaaabaaab
++ ababaaaaabbbaba
++ baabbaaaabbaaaababbaababb
++ abbbbabbbbaaaababbbbbbaaaababb
++ aaaaabbaabaaaaababaa
++ aaaabbaaaabbaaa
++ aaaabbaabbaaaaaaabbbabbbaaabbaabaaa
+- babaaabbbaaabaababbaabababaaab
++ aabbbbbaabbbaaaaaabbbbbababaaaaabbaaabba
+- 
+part 2 (173)  14
+
+Compilation finished at Fri Dec 18 21:50:53
+
+ ((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a)
+|((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a  \1)
+
+ ((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a  b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))
+|((?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a \2
+b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))$
 """
+
+
+ # part 2
+ # 8: 42 | 42 8
+ # 11: 42 31 | 42 11 31
+ # 0: 8 11
+
+# | (?: 42    -     31
+# | (?: 42 42 31 31
+# | (?: 42 42 42 31 31 31
+# | (?: 42 42 42 42 31 31 31 31
+# | (?: 42 42 42 42 42 31 31 31 31 31 
+"""
+(?:
+ (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+)
++
+ (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+ (?:
+ e (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+ )
+*
+                                                                                                                            b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))$
+
+ r31:b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))$
+ r42:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+
+(?:
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+)+
+
+(?:
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a 
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+)
+
+|
+
+(?:
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+)
+|
+(?:
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+    b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))
+)
+|
+(?:
+    (?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))$
+
+((?:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a)+)
+(|(?:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a)))|(?:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)ab(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))b(?:b(?:a(?:ba)|b(?:aa))|a(?:b(?:ab|(?:a|b)a)|a(?:ba|ab)))|a(?:b(?:(?:ab|(?:a|b)a)b|(?:(?:a|b)a|bb)a)|a(?:(?:ba)b|(?:ba|bb)a))))$
+
+"""
+
+   # r42s = " r42 "
+   # r31s = " r31 "
+   # r11s = "(?:"+r42s+r31s+")"       
+
+   # for i in range(2,6):
+   #     r11s = r11s + "|(?:" + r42s * i + r31s * i +")"
+       
+   # print "R11s = ",r11s
+
+def cleanup(rulez):
+     return rulez.replace("(?:|)","|").replace('(?:a)', 'a').replace('(?:b)','b').replace('(?:a)', 'a').replace('(?:b)','b')
+     # return rulez.replace("(?:|)","|")
+ 
+def part2():    
+   r42 = cleanup( expand_rule("42"))
+   r31 = cleanup( expand_rule("31"))
+   r8  = "\n#r8\n(?:\n"+r42+"\n)+\n"
+   # r8  = "(("+r42+")+)"
+   # r11 = r42+"(?:"+r42+r31+")"+r31
+#   r11 = "(?:"+r42+r31+")"
+#   r11 = "("+r42+r31+")"
+#   r11 = "q"
+
+   # r42 = "r42"
+   # r31 = "R31"
+ 
+#   for i in range(2,9):
+#       r11 = r11 + "|(?:" + r42 * i + r31 * i + ")"
+#      r11 = r11 + "|("   + r42 * i + r31 * i + ")"
+
+
+
+   r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,2))
+   
+ # part 2
+ # 8: 42 | 42 8
+ # 11: 42 31 | 42 11 31
+ # 0: 8 11
+
+# | (?: 42 31
+# | (?: 42 42 31 31
+# | (?: 42 42 42 31 31 31
+# | (?: 42 42 42 42 31 31 31 31
+# | (?: 42 42 42 42 42 31 31 31 31 31 
+       
+
+   
+   z = "("+r8+")\n("+r11+")$"
+#   z = r8+r11+"$"   
+
+   #   z = cleanup(expand_rule( "0" )) # without 8 and 11
+   print len(z)
+   print
+   if len(z) < 7000:
+       print z
+   import re
+   myre = re.compile(z , re.VERBOSE)
+
+   for m in messages:
+       mm =  myre.match(m)
+       if mm :
+           print "+\t",m
+           for g in mm.groups():
+               print " \t",g
+               pass
+       else:
+           print "-",m
+           
+   print
+   print "part 2 (12) ", sum( 1 for m in messages if myre.match(m))
+   print "r42 ", r42
+   print "r31 ", r31
+
+part2()
+
+# print " max(len(m) for m in messages)", max(len(m) for m in messages)
+# print "".join(sorted(" r42:(?:b(?:a(?:bb|ab)|b(?:(?:a|b)(?:a|b)))|a(?:b(?:bb)|a(?:bb|a(?:a|b))))b|(?:(?:(?:aa|ab)a|(?:bb)b)b|(?:(?:(?:a|b)a|bb)a)a)a"))
+# aaaaaaaaaaaaaaaaabbbbbbbbbbbbbbbbbbbbbbr
