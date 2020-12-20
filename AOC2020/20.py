@@ -308,7 +308,10 @@ Tile 3079:
 
 alltiles={}
 allborders={}
-
+BLEFT = 0
+BTOP = 1
+BRIGHT =2
+BBOTTOM = 3
 class CTile:
     def __init__(self,idnum):
         self.idnum = idnum
@@ -319,7 +322,7 @@ class CTile:
         self.corner = False
         
     def __repr__(self):
-        return "Tile #%d\n" % self.idnum + "\n".join(self.data)
+        return "\nTile #%d\n" % self.idnum + "\n".join(self.data)+"\n"
 
 
     def record_border_key(self,key):
@@ -344,19 +347,24 @@ class CTile:
     def gen_border_keys(self):
         self.borders = []  # re-initialize for post spin update
         self.flipped = []  # re-initialize for post spin update
-        self.record_both_keys( self.data[  0] ) #top
-        self.record_both_keys( self.data[ -1][::-1] )     #bottom    
-        self.record_both_keys( "".join(i[  0] for i in self.data[::-1]) ) #left    
-        self.record_both_keys( "".join(i[ -1] for i in self.data) ) #right
+        # self.record_both_keys( self.data[  0] ) #top
+        # self.record_both_keys( self.data[ -1][::-1] )     #bottom    
+        # self.record_both_keys( "".join(i[  0] for i in self.data[::-1]) ) #left    
+        # self.record_both_keys( "".join(i[ -1] for i in self.data) ) #right
 
+        self.record_both_keys( "".join(i[  0] for i in self.data[::-1]) ) #left    
+        self.record_both_keys( self.data[  0] ) #top
+        self.record_both_keys( "".join(i[ -1] for i in self.data) ) #right
+        self.record_both_keys( self.data[ -1][::-1] )     #bottom    
+        
     def common_boarder_count(self):
         return sum( len(allborders[k]) for k in self.borders) + sum( len(allborders[k]) for k in self.flipped) 
 
 
     def rotate_cw_90(self):
         r = []
-        for i in len(self.data):
-            r.append( "".join( d[i] for d in self.data ))
+        for i in range(len(self.data)):
+            r.append( "".join( d[i] for d in self.data[::-1] ))
         self.data = r
         self.gen_border_keys()
 
@@ -369,39 +377,129 @@ class CTile:
         self.gen_border_keys()
         
     def spin_by_left_side_key(self, key):
-        assert( key in self.borders or key in self.flipped)
+        """ for left side matching - we need the flipped version of the key
+        so if found in borders, get the key in the same orientation from
+        the flipped list, and rotate THAT to the left."""
+        if key in self.borders:
+            key = self.flipped[self.borders.index(key)]
+            self.mirror()
+        else:
+            key = self.borders[self.flipped.index(key)]
+            
+        assert( key in self.borders)
+        if key in self.borders:
+            i = self.borders.index(key)
+            if i == 0:
+                pass
+            elif i == 1:
+                self.rotate_cw_90()
+                self.rotate_180()
+            elif i == 2:
+                self.rotate_180()
+            elif i == 3:
+                self.rotate_cw_90()
+
+    def spin_by_top_side_key(self, key):
+        """ for left side matching - we need the flipped version of the key
+        so if found in borders, get the key in the same orientation from
+        the flipped list, and rotate THAT to the left."""
+        if key in self.borders:
+            key = self.flipped[self.borders.index(key)]
+            self.mirror()
+        else:
+            key = self.borders[self.flipped.index(key)]
+            
+        assert( key in self.borders)
         if key in self.borders:
             i = self.borders.index(key)
             if i == 0:
                 self.rotate_cw_90()
-                self.rotate_180()
             elif i == 1:
-                self.rotate_cw_90()
-            elif i == 2:
                 pass
+            elif i == 2:
+                self.rotate_cw_90()
+                self.rotate_180()
             elif i == 3:
                 self.rotate_180()
+
+                
+
+    def xspin_by_left_side_key(self, key):
+        """ for left side matching - we need the flipped version of the key
+        so if found in borders, get the key in the same orientation from
+        the flipped list, and rotate THAT to the left."""
+        if key in self.borders:
+            key = self.flipped[self.borders.index(key)]
+            self.mirror()
+        else:
+            key = self.borders[self.flipped.index(key)]
+            
+        assert( key in self.borders or key in self.flipped)
+        if key in self.borders:
+            i = self.borders.index(key)
+            if i == 0:
+                pass
+            elif i == 1:
+                self.rotate_cw_90()
+                self.rotate_180()
+            elif i == 2:
+                self.rotate_180()
+            elif i == 3:
+                self.rotate_cw_90()
         if key in self.flipped:
             self.mirror()
             i = self.flipped.index(key)
             if i == 0:
-                self.rotate_cw_90()
                 self.rotate_180()
             elif i == 1:
                 self.rotate_cw_90()
-            elif i == 2:
                 self.rotate_180()
-            elif i == 3:
+            elif i == 2:
                 pass
+            elif i == 3:
+                self.rotate_cw_90()
         self.gen_border_keys()
-
+        
     def get_non_shared_side(self):
         for i in self.borders:
             if len(allborders[i]) == 1:
                 return i
 
+    def get_right_neighboor(self):
+        rid = self.borders[BRIGHT]
+        rightneighboor = [i for i in allborders[rid] if not i == self]
+        if rightneighboor:
+            return rightneighboor[0]
+        else:
+            return None
+
+    def get_bottom_neighboor(self):
+        bid = self.borders[BBOTTOM]
+        # print "\nbid.b = ",bid, [len(allborders[a]) for a in self.borders]
+        bottomneighboor = [i for i in allborders[bid] if not i == self]
+        if bottomneighboor:
+            return bottomneighboor[0]
+        else:
+            bid = self.flipped[BBOTTOM]
+            # print "bid.f = ",bid,  [len(allborders[a]) for a in self.flipped]
+            bottomneighboor = [i for i in allborders[bid] if not i == self]
+            if bottomneighboor:
+                return bottomneighboor[0]
+            else:
+                return None
+        
+    
+    def spin_to_top_left(self):
+        orient = [len(allborders[i]) for i in self.borders]        
+        for i in range(4):
+            if not (( orient[0] == 1) and (orient[1] == 1)):
+                self.rotate_cw_90()
+                orient = [len(allborders[i]) for i in self.borders]
+            
     def show_shared_sides(self):
         for i in self.borders:
+            print i, len(allborders[i])
+        for i in self.flipped:
             print i, len(allborders[i])
 
         
@@ -455,17 +553,17 @@ for zl in allborders:
         print z.borders, z.flipped
     break
 
-count = 0
-for zl in allborders:
-    if len(allborders[zl]) > 1:
-        count+=1
-        print count,"key",zl, "=", len(allborders[zl])
+# count = 0
+# for zl in allborders:
+#     if len(allborders[zl]) > 1:
+#         count+=1
+#         print count,"key",zl, "=", len(allborders[zl])
 
 
 corners = sorted([(v.common_boarder_count(),v) for v in alltiles.values()])
 accum = 1
 for i,j in corners:
-    print i, j.idnum, accum
+    # print i, j.idnum, accum
     if i == 12:
         accum = accum * j.idnum
         j.corner = True
@@ -503,5 +601,106 @@ go back to left or just move down ?
 
 
 start = corners[0][1]
-start.show_shared_sides()
-print start.get_non_shared_side()
+# start.show_shared_sides()
+# print start.get_non_shared_side()
+# print start
+# start.show_shared_sides()
+start.spin_to_top_left()
+# print start
+# start.show_shared_sides()
+# rightside = start.borders[BRIGHT]
+# print "rightside", rightside
+# # print "allborders[rightside]"
+# # print allborders[rightside]
+# rn = start.get_right_neighboor()
+# print rn
+# rn.show_shared_sides()
+# rn.spin_by_left_side_key(rightside)
+# print start
+# print rn
+
+
+def advance_right_neighboor(start):
+    rightside = start.borders[BRIGHT]
+    print "rightside", rightside
+    rn = start.get_right_neighboor()
+    if rn:
+        rn.spin_by_left_side_key(rightside)
+    return rn
+
+
+def dump_row_of(tilelist):
+    for i in range(len(tilelist[0].data)):
+        print " ".join(t.data[i] for t in tilelist)
+
+def dump_trimmed_row_of(tilelist):
+    for i in range(1,len(tilelist[0].data)-1):
+        print "".join(t.data[i][1:-1] for t in tilelist)
+        
+
+def advance_bottom_neighboors(rowtiles):
+    rowtiles2 = []
+
+    for t in rowtiles:
+        bside = t.borders[BBOTTOM]
+        bn = t.get_bottom_neighboor()
+        if bn:
+            bn.spin_by_top_side_key(bside)
+            rowtiles2.append(bn)
+        else:
+            print "No bottom neighboor for ", t.idnum
+    return rowtiles2
+
+def do_puzzle_from_corner( c ):
+    atile = c
+    rowtiles = [atile]
+    print "======="
+    while atile:
+        # print atile
+        atile = advance_right_neighboor(atile)
+        if atile:
+            rowtiles.append(atile)
+        
+    puzzle = [rowtiles]
+
+    puzzle.append( advance_bottom_neighboors( rowtiles ) )
+    puzzle.append( advance_bottom_neighboors( rowtiles ) )
+    return puzzle
+
+puzzle = do_puzzle_from_corner( start )
+    
+for prow in puzzle:
+    dump_row_of( prow )
+    print
+
+print "\nTrimmed\n"    
+for prow in puzzle:
+    dump_trimmed_row_of( prow )
+
+    
+""" sample trimmed image
+.#.#..#.##...#.##..#####
+###....#.#....#..#......
+##.##.###.#.#..######...
+###.#####...#.#####.#..#
+##.#....#.##.####...#.##
+...########.#....#####.#
+....#..#...##..#.#.###..
+.####...#..#.....#......
+#..#.##..#..###.#.##....
+#.####..#.####.#.#.###..
+###.#.#...#.######.#..##
+#.####....##..########.#
+##..##.#...#...#.#.#.#..
+...#..#..#.#.##..###.###
+.#.#....#.##.#...###.##.
+###.#...#..#.##.######..
+.#.#.###.##.##.#..#.##..
+.####.###.#...###.#..#.#
+..#.#..#..#.#.#.####.###
+#..####...#.#.#.###.###.
+#####..#####...###....##
+#.##..#..#...#..####...#
+.#.###..##..##..####.##.
+...###...##...#...#..###
+"""
