@@ -2,7 +2,10 @@ fcmd=/Library/Frameworks/Mono.framework/Versions/Current/bin/fsharpc
 mcmd=time /Library/Frameworks/Mono.framework/Versions/Current/bin/mono
 
 
-all:  aoc19_day25.exe
+
+log16: 16.fs 
+	$(fcmd) 16.fs
+	$(mcmd) 16.exe > 16.log
 
 all2:  aoc19_day19_part2.exe 
 

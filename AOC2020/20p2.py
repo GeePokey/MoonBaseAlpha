@@ -1,3 +1,8 @@
+# day 20 part2
+
+SAMPLEFLAG=True
+SAMPLEFLAG=False
+
 description = """
 Advent of Code[About][Events][Shop][Settings][Log Out]geepokey 37*
       /^2020$/[Calendar][AoC++][Sponsors][Leaderboard][Stats]
@@ -192,9 +197,11 @@ Answer:
 
 You can also [Share] this puzzle.
 """
+
 inputdata = file("input.day20.txt").read()
 
-xinputdata = """
+if SAMPLEFLAG:
+    inputdata = """
 
 Tile 2311:
 ..##.#..#.
@@ -798,13 +805,16 @@ seamonster_txt = r"""
 (
 ..................#.%s
 #....##....##....###%s
-.#..#..#..#..#..#...%s
+.#..#..#..#..#..#...
 )
 """
 
-monsterpad = 1 + 24 - 20 # 1 is for newline. 24 for sample
-monsterpad = 1 + 96 - 20 # 1 is for newline. 96 for real
-seamonster_txt = seamonster_txt % ( '.' * monsterpad, '.' * monsterpad, '.' * monsterpad )
+if SAMPLEFLAG:
+    monsterpad = 1 + 24 - 20 # 1 is for newline. 24 for sample
+else:
+    monsterpad = 1 + 96 - 20 # 1 is for newline. 96 for real
+    
+seamonster_txt = seamonster_txt % ( '.' * monsterpad, '.' * monsterpad )
 
 sample = sample.replace("#","x").replace(".","_")
 seamonster_txt = seamonster_txt.replace("#","x")
@@ -827,16 +837,20 @@ seamonster_re  = re.compile(seamonster_txt  , re.VERBOSE| re.DOTALL)
 print "\nLater"
 for i in later():
     print "\n\n"
-    print i
+    # print i
     print
     ifixed  = i.replace("#","x").replace(".","_")    
     nummonsters = len(list(seamonster_re.findall(ifixed)))
     numhashpermonster = 15
-    print "answer part2 sample ", nummonsters, sum( 1 for i in ifixed if i == "x") - numhashpermonster * nummonsters
+    print "answer part2  monsters = ", nummonsters, "remaining hashes = ", sum( 1 for i in ifixed if i == "x") - numhashpermonster * nummonsters
 
 """    
 
 Compilation finished at Sun Dec 20 15:18:16
 
 That's not the right answer; your answer is too low. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 585.) [Return to Day 20]
+
+That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 2174.) [Return to Day 20]
+
+That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 2114.) [Return to Day 20]
 """
