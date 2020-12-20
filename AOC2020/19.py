@@ -296,7 +296,7 @@ def cleanup(rulez):
      return rulez.replace("(?:|)","|").replace('(?:a)', 'a').replace('(?:b)','b').replace('(?:a)', 'a').replace('(?:b)','b')
      # return rulez.replace("(?:|)","|")
  
-def part2():    
+def part2_original_gold_star_earning():    
    r42 = cleanup( expand_rule("42"))
    r31 = cleanup( expand_rule("31"))
    r8  = "\n#r8\n(?:\n"+r42+"\n)+\n"
@@ -320,7 +320,7 @@ def part2():
 
    r42 = '(%s)'% r42
    r31 = '(%s)'% r31 
-   r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,9))
+   r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,5))
    
  # part 2
  # 8: 42 | 42 8
@@ -341,7 +341,7 @@ def part2():
    #   z = cleanup(expand_rule( "0" )) # without 8 and 11
    print len(z)
    print
-   if len(z) < 7000:
+   if len(z) < 27000:
        print z
    import re
    myre = re.compile(z , re.VERBOSE)
@@ -349,19 +349,72 @@ def part2():
    for m in messages:
        mm =  myre.match(m)
        if mm :
-           print "+\t",m
+           # print "+\t",m
            for g in mm.groups():
                # print " \t",g
                pass
        else:
-           print "-",m
+           #print "-",m
+           pass
            
    print
    #    print "part 2 (12 sample) ", sum( 1 for m in messages if myre.match(m))
    print "part 2 (367) ", sum( 1 for m in messages if myre.match(m))
-   print "r42 ", r42
-   print "r31 ", r31
+   # print "r42 ", r42
+   # print "r31 ", r31
 
+ 
+def part2():
+    """prettiffied
+    # part 2
+    # 8: 42 | 42 8
+    # 11: 42 31 | 42 11 31
+    # 0: 8 11
+    
+    # | (?: 42 31
+    # | (?: 42 42 31 31
+    # | (?: 42 42 42 31 31 31
+    # | (?: 42 42 42 42 31 31 31 31
+    # | (?: 42 42 42 42 42 31 31 31 31 31 
+    """
+
+    r42 = cleanup( expand_rule("42"))
+    r31 = cleanup( expand_rule("31"))
+    r42 = '(%s)'% r42
+    r31 = '(%s)'% r31 
+    r8  = "\n#r8\n(?:\n"+r42+"\n)+\n"
+ 
+
+    r11 = '\n#r11\n(%s)\n' % ")\n  |\n(".join("\n# n%d\n  (%s)\n  (%s)"%(i,r42*i,r31*i) for i in range(1,5))
+   
+    z = "("+r8+")\n("+r11+")$"
+    #   z = cleanup(expand_rule( "0" )) # without 8 and 11
+    print len(z)
+    print
+    if len(z) < 27000:
+        #print z
+        print
+
+    import re
+    myre = re.compile(z , re.VERBOSE)
+
+    for m in messages:
+        mm =  myre.match(m)
+        if mm :
+            # print "+\t",m
+            for g in mm.groups():
+                # print " \t",g
+                pass
+        else:
+            #print "-",m
+            pass
+           
+    print
+    #    print "part 2 (12 sample) ", sum( 1 for m in messages if myre.match(m))
+    print "part 2 (367) ", sum( 1 for m in messages if myre.match(m))
+    # print "r42 ", r42
+    # print "r31 ", r31
+   
 part2()
 
 # print " max(len(m) for m in messages)", max(len(m) for m in messages)
