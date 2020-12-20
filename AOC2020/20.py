@@ -600,12 +600,12 @@ go back to left or just move down ?
 """
 
 
-start = corners[0][1]
+## start = corners[0][1]
 # start.show_shared_sides()
 # print start.get_non_shared_side()
 # print start
 # start.show_shared_sides()
-start.spin_to_top_left()
+## start.spin_to_top_left()
 # print start
 # start.show_shared_sides()
 # rightside = start.borders[BRIGHT]
@@ -618,6 +618,8 @@ start.spin_to_top_left()
 # rn.spin_by_left_side_key(rightside)
 # print start
 # print rn
+
+
 
 
 def advance_right_neighboor(start):
@@ -634,8 +636,9 @@ def dump_row_of(tilelist):
         print " ".join(t.data[i] for t in tilelist)
 
 def dump_trimmed_row_of(tilelist):
-    for i in range(1,len(tilelist[0].data)-1):
-        print "".join(t.data[i][1:-1] for t in tilelist)
+    if tilelist:
+        for i in range(1,len(tilelist[0].data)-1):
+            print "".join(t.data[i][1:-1] for t in tilelist)
         
 
 def advance_bottom_neighboors(rowtiles):
@@ -663,22 +666,35 @@ def do_puzzle_from_corner( c ):
         
     puzzle = [rowtiles]
 
-    puzzle.append( advance_bottom_neighboors( rowtiles ) )
-    puzzle.append( advance_bottom_neighboors( rowtiles ) )
+    r2 = advance_bottom_neighboors( rowtiles )
+    puzzle.append(r2)
+    r2 = advance_bottom_neighboors( r2 )
+    puzzle.append(r2)
     return puzzle
 
-puzzle = do_puzzle_from_corner( start )
-    
-for prow in puzzle:
-    dump_row_of( prow )
-    print
-
-print "\nTrimmed\n"    
-for prow in puzzle:
-    dump_trimmed_row_of( prow )
 
     
-""" sample trimmed image
+# for prow in puzzle:
+#     dump_row_of( prow )
+#     print
+
+def later():
+    for flip in [False,True]:
+        for cc in range(4):
+            
+            start = corners[cc][1]
+            if flip:
+                start.mirror()
+            start.spin_to_top_left()
+            puzzle = do_puzzle_from_corner( start )
+
+            print "\nTrimmed\n"    , cc, flip
+            for prow in puzzle:
+                dump_trimmed_row_of( prow )
+                # dump_row_of(prow)
+
+    
+sample = """ sample trimmed image
 .#.#..#.##...#.##..#####
 ###....#.#....#..#......
 ##.##.###.#.#..######...
@@ -703,4 +719,115 @@ for prow in puzzle:
 #.##..#..#...#..####...#
 .#.###..##..##..####.##.
 ...###...##...#...#..###
+
+
+.####...#####..#...###..
+#####..#..#.#.####..#.#.
+.#.#...#.###...#.##.O#..
+#.O.##.OO#.#.OO.##.OOO##
+..#O.#O#.O##O..O.#O##.##
+...#.#..##.##...#..#..##
+#.##.#..#.#..#..##.#.#..
+.###.##.....#...###.#...
+#.####.#.#....##.#..#.#.
+##...#..#....#..#...####
+..#.##...###..#.#####..#
+....#.##.#.#####....#...
+..##.##.###.....#.##..#.
+#...#...###..####....##.
+.#.##...#.##.#.#.###...#
+#.###.#..####...##..#...
+#.###...#.##...#.##O###.
+.O##.#OO.###OO##..OOO##.
+..O#.O..O..O.#O##O##.###
+#.#..##.########..#..##.
+#.#####..#.#...##..#....
+#....##..#.#########..##
+#...#.....#..##...###.##
+#..###....##.#...##.##.#
 """
+
+sample = """
+.####...#####..#...###..
+#####..#..#.#.####..#.#.
+.#.#...#.###...#.##.##..
+#.#.##.###.#.##.##.#####
+..##.###.####..#.####.##
+...#.#..##.##...#..#..##
+#.##.#..#.#..#..##.#.#..
+.###.##.....#...###.#...
+#.####.#.#....##.#..#.#.
+##...#..#....#..#...####
+..#.##...###..#.#####..#
+....#.##.#.#####....#...
+..##.##.###.....#.##..#.
+#...#...###..####....##.
+.#.##...#.##.#.#.###...#
+#.###.#..####...##..#...
+#.###...#.##...#.######.
+.###.###.#######..#####.
+..##.#..#..#.#######.###
+#.#..##.########..#..##.
+#.#####..#.#...##..#....
+#....##..#.#########..##
+#...#.....#..##...###.##
+#..###....##.#...##.##.#
+"""
+
+"""
+sea monster
+..................#.
+#....##....##....###
+.#..#..#..#..#..#...
+
+"""
+
+seamonster_txt = """
+(
+....................#.(.*)\\n
+..#....##....##....###\\2\\n
+...#..#..#..#..#..#...\\2\\n
+)
+"""
+
+seamonster_txt = r"""
+(
+..................#.(?s:.....)
+#....##....##....###(?s:.....)
+.#..#..#..#..#..#...(?s:.....)
+)
+"""
+
+seamonster_txt = r"""
+(
+..................#......
+#....##....##....###.....
+.#..#..#..#..#..#........
+)
+"""
+
+xseamonster_txt = """
+(
+....................#...\\n
+..#....##....##....###..\\n
+...#..#..#..#..#..#.....\\n
+)
+"""
+
+sample = sample.replace("#","x").replace(".","_")
+seamonster_txt = seamonster_txt.replace("#","x")
+#print sample
+
+print seamonster_txt
+
+import re
+seamonster_re  = re.compile(seamonster_txt  , re.VERBOSE| re.DOTALL)
+
+print "seamonsters"
+
+m = seamonster_re.search( sample )
+print m, m.groups()
+print sample.index(m.group(0)), len(sample), len(list(seamonster_re.findall(sample)))
+nummonsters = len(list(seamonster_re.findall(sample)))
+numhashpermonster = 15
+print sum( 1 for i in sample if i == "x") - numhashpermonster * nummonsters
