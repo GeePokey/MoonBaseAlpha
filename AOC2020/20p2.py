@@ -834,15 +834,29 @@ seamonster_re  = re.compile(seamonster_txt  , re.VERBOSE| re.DOTALL)
 # numhashpermonster = 15
 # print sum( 1 for i in sample if i == "x") - numhashpermonster * nummonsters
 
+print seamonster_txt
 print "\nLater"
 for i in later():
     print "\n\n"
-    # print i
+    ifixed  = i.replace("#","x").replace(".","_")
+    print ifixed
     print
-    ifixed  = i.replace("#","x").replace(".","_")    
-    nummonsters = len(list(seamonster_re.findall(ifixed)))
+
+    nummonsters = 0
+    nextm = seamonster_re.search(ifixed)
+    while nextm > 0:
+        nummonsters += 1
+        nextm = seamonster_re.search(ifixed, nextm.start()+1)
+    if nummonsters > 0:
+        for j in seamonster_re.findall(ifixed):
+            print ifixed.index(j)
+            print j
+            print
+            
     numhashpermonster = 15
-    print "answer part2  monsters = ", nummonsters, "remaining hashes = ", sum( 1 for i in ifixed if i == "x") - numhashpermonster * nummonsters
+    print "answer part2  monsters = ", nummonsters, "remaining hashes = ", sum( 1 for k in ifixed if k == "x") - numhashpermonster * nummonsters
+    if nummonsters > 0:
+        break
 
 """    
 
@@ -853,4 +867,10 @@ That's not the right answer; your answer is too low. If you're stuck, make sure 
 That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 2174.) [Return to Day 20]
 
 That's not the right answer; your answer is too high. If you're stuck, make sure you're using the full input data; there are also some general tips on the about page, or you can ask for hints on the subreddit. Please wait one minute before trying again. (You guessed 2114.) [Return to Day 20]
+
+
+answer part2  monsters =  29 remaining hashes =  2009
+
+Compilation finished at Sun Dec 20 16:47:25
+
 """

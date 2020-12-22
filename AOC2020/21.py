@@ -8,14 +8,13 @@ sqjhc fvjkl (contains soy)
 sqjhc mxmxvkd sbzzf (contains fish)
 """
 
-inputdata = file('input.day21.txt').read()
+xinputdata = file('input.day21.txt').read()
 
 possible = {}
 allfoods = set()
 allfoodcounters = {}
 for i in inputdata.split("\n"):
     if "(contains" in i:
-        print "LINE: ",i
         foodstr, allergenstr = i.split("(contains ")
         foods = [i.strip() for i in foodstr.split(" ")]
         for f in foods:
@@ -30,10 +29,8 @@ for i in inputdata.split("\n"):
             if not a in possible:
                 possible[a] = set(foods)
             else:
-                print a
-                print "pre -",possible[a]
                 possible[a] = possible[a] & set(foods)
-                print "post ",possible[a]
+
 
 print "\n Summary"                
 for a in possible:
